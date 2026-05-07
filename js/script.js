@@ -31,6 +31,12 @@ var words = {
     total_reservations: "Total reservations",
     popular_movie: "Most popular movie",
     title: "Title",
+    movie_title: "Movie title",
+    description_en: "Description in English",
+    description_lv: "Description in Latvian",
+    poster_help: "Put the poster file in the images folder and type its path here.",
+    session_movie: "Movie for this session",
+    session_datetime: "Session date and time",
     duration: "Duration",
     age: "Age restriction",
     minutes: "minutes",
@@ -85,6 +91,12 @@ var words = {
     total_reservations: "Rezervācijas kopā",
     popular_movie: "Populārākā filma",
     title: "Nosaukums",
+    movie_title: "Filmas nosaukums",
+    description_en: "Apraksts angliski",
+    description_lv: "Apraksts latviski",
+    poster_help: "Ievieto plakāta failu images mapē un ieraksti ceļu šeit.",
+    session_movie: "Filma šim seansam",
+    session_datetime: "Seansa datums un laiks",
     duration: "Ilgums",
     age: "Vecuma ierobežojums",
     minutes: "minūtes",
@@ -569,18 +581,9 @@ function loadAdminPage() {
       return;
     }
 
-    document.getElementById("totalUsers").innerHTML =
-      text("total_users") + ": <strong>" + data.totalUsers + "</strong>";
-    document.getElementById("totalReservations").innerHTML =
-      text("total_reservations") +
-      ": <strong>" +
-      data.totalReservations +
-      "</strong>";
-    document.getElementById("popularMovie").innerHTML =
-      text("popular_movie") +
-      ": <strong>" +
-      escapeHtml(data.popularMovie) +
-      "</strong>";
+        document.getElementById("totalUsers").textContent = data.totalUsers;
+        document.getElementById("totalReservations").textContent = data.totalReservations;
+        document.getElementById("popularMovie").textContent = data.popularMovie;
 
     fillAdminSelects(data);
     fillMovieTable(data.movies);

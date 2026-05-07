@@ -33,9 +33,20 @@
       <h1 data-i18n="admin_panel">Admin panel</h1>
 
       <section class="stats">
-        <div class="stat detail" id="totalUsers"></div>
-        <div class="stat detail" id="totalReservations"></div>
-        <div class="stat detail" id="popularMovie"></div>
+        <div class="stat detail">
+          <p data-i18n="total_users">Total users</p>
+          <strong id="totalUsers">0</strong>
+        </div>
+
+        <div class="stat detail">
+          <p data-i18n="total_reservations">Total reservations</p>
+          <strong id="totalReservations">0</strong>
+        </div>
+
+        <div class="stat detail">
+          <p data-i18n="popular_movie">Most popular movie</p>
+          <strong id="popularMovie">-</strong>
+        </div>
       </section>
 
       <h2 data-i18n="movie_management">Movie management</h2>
@@ -44,8 +55,13 @@
         <input type="hidden" name="id" id="movieId" value="0" />
 
         <label>
-          <span data-i18n="title">Title</span>
-          <input name="title" id="movieTitle" required />
+          <span data-i18n="movie_title">Movie title</span>
+          <input
+            name="title"
+            id="movieTitle"
+            placeholder="Example: Project Hail Mary"
+            required
+          />
         </label>
 
         <label>
@@ -54,19 +70,21 @@
         </label>
 
         <label>
-          Description EN
+          <span data-i18n="description_en">Description in English</span>
           <textarea
             name="description_en"
             id="descriptionEn"
+            placeholder="Write a short movie description in English."
             required
           ></textarea>
         </label>
 
         <label>
-          Description LV
+          <span data-i18n="description_lv">Description in Latvian</span>
           <textarea
             name="description_lv"
             id="descriptionLv"
+            placeholder="Uzraksti īsu filmas aprakstu latviski."
             required
           ></textarea>
         </label>
@@ -79,13 +97,21 @@
             id="duration"
             min="1"
             value="90"
+            placeholder="Example: 120"
             required
           />
         </label>
 
         <label>
           <span data-i18n="poster">Poster path</span>
-          <input name="poster" id="poster" value="images/Drama.jpg" />
+          <input
+            name="poster"
+            id="poster"
+            value="images/Drama.jpg"
+            placeholder="images/project_hail_mary.jpg"
+            required
+          />
+          <small data-i18n="poster_help">Put the poster file in the images folder and type its path here.</small>
         </label>
 
         <label>
@@ -94,6 +120,7 @@
             name="age_restriction"
             id="ageRestriction"
             value="12+"
+            placeholder="Example: 7+, 12+, 16+, 18+"
             required
           />
         </label>
@@ -120,28 +147,42 @@
 
       <form class="admin-form" id="sessionForm">
         <label>
-          <span data-i18n="title">Title</span>
+          <span data-i18n="session_movie">Movie for this session</span>
           <select name="movie_id" id="sessionMovie"></select>
         </label>
 
         <label>
-          <span data-i18n="date">Date</span>
+          <span data-i18n="session_datetime">Session date and time</span>
           <input type="datetime-local" name="show_time" required />
         </label>
 
         <label>
           <span data-i18n="hall">Hall</span>
-          <input name="hall" required />
+          <input name="hall" placeholder="Example: Hall 1" required />
         </label>
 
         <label>
           <span data-i18n="price">Price</span>
-          <input type="number" name="price" min="0" step="0.01" required />
+          <input
+            type="number"
+            name="price"
+            min="0"
+            step="0.01"
+            placeholder="Example: 7.50"
+            required
+          />
         </label>
 
         <label>
           <span data-i18n="seats">Seats</span>
-          <input type="number" name="seats_total" min="1" value="60" required />
+          <input
+            type="number"
+            name="seats_total"
+            min="1"
+            value="60"
+            placeholder="Example: 60"
+            required
+          />
         </label>
 
         <button type="submit" data-i18n="add_session">Add session</button>

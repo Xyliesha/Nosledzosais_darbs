@@ -1,10 +1,12 @@
 # Kino Programma
 
-Kino Programma is a simple cinema booking website for a student final project.
+`Kino Programma` ir vienkārša kino biļešu rezervācijas tīmekļa vietne studentu noslēguma darbam.
 
-The frontend is normal static HTML, CSS, and JavaScript. PHP is used only for the backend API and database connection.
+Projekta priekšgals ir veidots ar parastu HTML, CSS un JavaScript. PHP tiek izmantots tikai datubāzes savienojumam un `api.php` failam, kas apstrādā pieprasījumus.
 
-## Project Structure
+Filmas netiek veidotas automātiski no attēlu failu nosaukumiem. Filmas pievieno administrators caur administrācijas paneli.
+
+## Projekta Struktūra
 
 - `index.html`
 - `movie.html`
@@ -21,7 +23,7 @@ The frontend is normal static HTML, CSS, and JavaScript. PHP is used only for th
 - `js/sw.js`
 - `images/`
 
-## Technologies
+## Izmantotās Tehnoloģijas
 
 - HTML
 - CSS
@@ -29,19 +31,21 @@ The frontend is normal static HTML, CSS, and JavaScript. PHP is used only for th
 - PHP
 - MySQL
 
-## XAMPP Installation
+## Uzstādīšana Ar XAMPP
 
-1. Copy the project folder to `C:\xampp\htdocs\kino-programma`.
-2. Start Apache and MySQL in XAMPP.
-3. Open phpMyAdmin: `http://localhost/phpmyadmin`.
-4. Import `DB/db.sql`.
-5. Open the website: `http://localhost/kino-programma/index.html`.
+1. Nokopē projekta mapi uz `C:\xampp\htdocs\kino-programma`.
+2. Atver XAMPP Control Panel.
+3. Ieslēdz Apache un MySQL.
+4. Atver phpMyAdmin: `http://localhost/phpmyadmin`.
+5. Importē datubāzes failu `DB/db.sql`.
+6. Atver projektu pārlūkprogrammā:
+   `http://localhost/kino-programma/index.html`
 
-## Database
+## Datubāze
 
-The database name is `kino_programma`.
+Datubāzes nosaukums: `kino_programma`
 
-Tables:
+Tabulas:
 
 - `users`
 - `genres`
@@ -49,40 +53,102 @@ Tables:
 - `sessions`
 - `reservations`
 
-## Test Accounts
+## Testa Lietotāji
 
-Admin:
+Administrators:
 
-- Email: `admin@kino.test`
-- Password: `password`
+- E-pasts: `admin@kino.test`
+- Parole: `password`
 
-User:
+Parasts lietotājs:
 
-- Email: `user@kino.test`
-- Password: `password`
+- E-pasts: `user@kino.test`
+- Parole: `password`
 
-## Features
+## Projekta Funkcijas
 
-- Browse movies
-- Search movies by title
-- Filter movies by genre
-- View movie details and sessions
-- Real poster images from the `images/` folder
-- Duration and age restriction on movie cards
-- Register and login
-- Reserve tickets
-- Fake payment confirmation
-- View reservation history
-- Admin movie CRUD
-- Admin session management
-- Simple statistics
-- English and Latvian language switch
-- Simple PWA files
+- Filmu apskate
+- Filmu meklēšana pēc nosaukuma
+- Filtru izmantošana pēc žanra
+- Filmas detalizēta skata atvēršana
+- Filmas seansu apskate
+- Lietotāja reģistrācija
+- Lietotāja pieslēgšanās
+- Biļešu rezervācija
+- Viltus maksājuma apstiprināšana
+- Rezervāciju vēstures apskate
+- Administrators var pievienot, labot un dzēst filmas
+- Administrators var pārvaldīt seansus
+- Vienkārša statistika administrācijas panelī
+- Angļu un latviešu valodas pārslēgšana
+- Vienkāršs PWA atbalsts
+- Filmu kartītēs tiek rādīts plakāts, žanrs, apraksts, ilgums un vecuma ierobežojums
 
-## Test Cases
+## Administrācijas Paneļa Loģika
 
-1. Registration: create a new account on `register.html`.
-2. Login: login on `login.html` with the test user.
-3. Reservation: open a movie, choose tickets, and reserve a session.
-4. Admin CRUD: login as admin, add/edit/delete a movie on `admin.html`.
-5. Search/filter: search movies and filter by genre on `index.html`.
+Administrators manuāli pievieno filmas caur `admin.html`.
+
+Administratoram jāievada:
+
+- filmas nosaukums
+- žanrs
+- apraksts angļu valodā
+- apraksts latviešu valodā
+- filmas ilgums
+- vecuma ierobežojums
+- plakāta ceļš, piemēram `images/Project_Hail_Mary.jpg`
+
+Pēc filmas pievienošanas administrators var pievienot seansus:
+
+- filma
+- seansa datums un laiks
+- zāle
+- cena
+- vietu skaits
+
+Kad dati tiek saglabāti, tie nonāk MySQL datubāzē. Galvenā lapa `index.html` un filmas lapa `movie.html` ielādē datus no `api.php`, izmantojot JavaScript `fetch()`.
+
+## Projekta Datu Plūsma
+
+1. Plakātu attēli tiek glabāti `images/` mapē.
+2. Filmu dati tiek glabāti MySQL datubāzē.
+3. Administrators pievieno vai labo filmas `admin.html` lapā.
+4. `api.php` saglabā datus datubāzē.
+5. `index.html` ielādē filmu sarakstu no datubāzes.
+6. `movie.html` ielādē vienu izvēlēto filmu un tās seansus.
+
+## Drošība
+
+Projektā tiek izmantotas vienkāršas drošības metodes:
+
+- PDO prepared statements datubāzes pieprasījumiem
+- `password_hash()` paroles saglabāšanai
+- `password_verify()` paroles pārbaudei
+- PHP sesijas lietotāja pieslēgšanās saglabāšanai
+- administratora lomas pārbaude administrācijas darbībām
+- JavaScript pusē tiek izmantota teksta attīrīšana pirms datu ievietošanas lapā
+
+## Testēšanas Piemēri
+
+1. Reģistrācija:
+   Izveido jaunu lietotāju un pārbaudi, vai var pieslēgties.
+
+2. Pieslēgšanās:
+   Pieslēdzies ar `user@kino.test` un paroli `password`.
+
+3. Rezervācija:
+   Atver filmu, izvēlies seansu, ievadi biļešu skaitu un izveido rezervāciju.
+
+4. Administrācijas CRUD:
+   Pieslēdzies kā administrators, pievieno filmu, izlabo un izdzēs.
+
+5. Meklēšana un filtrēšana:
+   Meklē filmu pēc nosaukuma un izmanto žanra filtru.
+
+## Piezīmes
+
+Lai projekts darbotos pareizi, tas jāatver caur XAMPP serveri, piemēram:
+
+`http://localhost/kino-programma/index.html`
+
+Projektu nevajag atvērt tieši kā failu ar `file://`, jo tad `api.php` un datubāzes pieprasījumi nedarbosies.

@@ -211,6 +211,10 @@ if ($action == 'save_movie') {
     $ageRestriction = trim($_POST['age_restriction'] ?? '12+');
     $poster = trim($_POST['poster'] ?? '');
 
+    if ($genreId < 1 || $title == '' || $descriptionEn == '' || $descriptionLv == '' || $duration < 1 || $ageRestriction == '' || $poster == '') {
+        answer(array('success' => false, 'message' => 'invalid_movie_data'));
+    }
+
     if ($id > 0) {
         $stmt = $pdo->prepare('UPDATE movies SET genre_id = ?, title = ?, description_en = ?, description_lv = ?, duration = ?, age_restriction = ?, poster = ? WHERE id = ?');
         $stmt->execute(array($genreId, $title, $descriptionEn, $descriptionLv, $duration, $ageRestriction, $poster, $id));
@@ -235,13 +239,23 @@ if ($action == 'delete_movie') {
 if ($action == 'add_session') {
     requireAdmin();
 
+    $movieId = (int)$_POST['movie_id'];
+    $showTime = trim($_POST['show_time']);
+    $hall = trim($_POST['hall']);
+    $price = (float)$_POST['price'];
+    $seatsTotal = (int)$_POST['seats_total'];
+
+    if ($movieId < 1 || $showTime == '' || $hall == '' || $price < 0 || $seatsTotal < 1) {
+        answer(array('success' => false, 'message' => 'invalid_session_data'));
+    }
+
     $stmt = $pdo->prepare('INSERT INTO sessions (movie_id, show_time, hall, price, seats_total) VALUES (?, ?, ?, ?, ?)');
     $stmt->execute(array(
-        (int)$_POST['movie_id'],
-        $_POST['show_time'],
-        trim($_POST['hall']),
-        (float)$_POST['price'],
-        (int)$_POST['seats_total']
+        $movieId,
+        $showTime,
+        $hall,
+        $price,
+        $seatsTotal
     ));
 
     answer(array('success' => true));

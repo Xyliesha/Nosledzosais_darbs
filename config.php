@@ -1,13 +1,35 @@
 <?php
 session_start();
 
-$host = 'localhost';
 $database = 'kino_programma';
-$username = 'root';
-$password = '';
+
+$connections = array(
+    array('host' => 'localhost', 'username' => 'root', 'password' => ''),
+    array('host' => 'localhost', 'username' => 'root', 'password' => 'root'),
+    array('host' => '127.0.0.1', 'username' => 'root', 'password' => ''),
+    array('host' => '127.0.0.1', 'username' => 'root', 'password' => 'root')
+);
 
 try {
-    $pdo = new PDO("mysql:host=$host;dbname=$database;charset=utf8mb4", $username, $password);
+    $pdo = null;
+
+    foreach ($connections as $connection) {
+        try {
+            $pdo = new PDO(
+                "mysql:host=" . $connection['host'] . ";dbname=$database;charset=utf8mb4",
+                $connection['username'],
+                $connection['password']
+            );
+            break;
+        } catch (PDOException $e) {
+            $pdo = null;
+        }
+    }
+
+    if (!$pdo) {
+        throw new PDOException('Database connection failed');
+    }
+
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
