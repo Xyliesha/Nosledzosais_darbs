@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kino Programma - Register</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">Kino Programma</a>
+
+      <nav>
+        <a href="index.html" data-i18n="movies">Movies</a>
+        <a href="login.html" data-i18n="login">Login</a>
+        <a href="register.html" data-i18n="register">Register</a>
+      </nav>
+
+      <div class="lang">
+        <span data-i18n="language">Language</span>
+        <button type="button" class="small-button" onclick="setLanguage('en')">
+          EN
+        </button>
+        <button type="button" class="small-button" onclick="setLanguage('lv')">
+          LV
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <form class="form" id="registerForm">
+        <h1 data-i18n="register">Register</h1>
+        <p id="message"></p>
+
+        <label>
+          <span data-i18n="name">Name</span>
+          <input type="text" name="name" required />
+        </label>
+
+        <label>
+          <span data-i18n="email">Email</span>
+          <input type="email" name="email" required />
+        </label>
+
+        <label>
+          <span data-i18n="password">Password</span>
+          <input type="password" name="password" required minlength="6" />
+        </label>
+
+        <button type="submit" data-i18n="register">Register</button>
+      </form>
+    </main>
+
+    <footer class="footer">&copy; 2026 Kino Programma</footer>
+    <script src="js/script.js"></script>
+  </body>
+</html>

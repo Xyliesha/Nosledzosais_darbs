@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#111827" />
+    <title>Kino Programma - Movies</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">Kino Programma</a>
+
+      <nav>
+        <a href="index.html" data-i18n="movies">Movies</a>
+        <a href="login.html" class="guest-link" data-i18n="login">Login</a>
+        <a href="register.html" class="guest-link" data-i18n="register"
+          >Register</a
+        >
+        <a href="profile.html" class="user-link" data-i18n="profile">Profile</a>
+        <a href="admin.html" class="admin-link" data-i18n="admin">Admin</a>
+        <a href="#" id="logoutLink" class="user-link" data-i18n="logout"
+          >Logout</a
+        >
+      </nav>
+
+      <div class="lang">
+        <span data-i18n="language">Language</span>
+        <button type="button" class="small-button" onclick="setLanguage('en')">
+          EN
+        </button>
+        <button type="button" class="small-button" onclick="setLanguage('lv')">
+          LV
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Kino Programma</p>
+          <h1 data-i18n="movies">Movies</h1>
+          <p data-i18n="welcome">
+            Browse movies, choose a session, and reserve cinema tickets.
+          </p>
+        </div>
+      </section>
+
+      <form class="filters" id="searchForm">
+        <label>
+          <span data-i18n="search">Search</span>
+          <input type="search" id="searchInput" placeholder="Search by title" />
+        </label>
+
+        <label>
+          <span data-i18n="genre">Genre</span>
+          <select id="genreSelect">
+            <option value="0">All genres</option>
+          </select>
+        </label>
+
+        <button type="submit" data-i18n="search">Search</button>
+      </form>
+
+      <section class="movie-grid" id="movieList"></section>
+    </main>
+
+    <footer class="footer">&copy; 2026 Kino Programma</footer>
+    <script src="js/script.js"></script>
+  </body>
+</html>

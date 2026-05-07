@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kino Programma - Profile</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">Kino Programma</a>
+
+      <nav>
+        <a href="index.html" data-i18n="movies">Movies</a>
+        <a href="profile.html" data-i18n="profile">Profile</a>
+        <a href="admin.html" class="admin-link" data-i18n="admin">Admin</a>
+        <a href="#" id="logoutLink" data-i18n="logout">Logout</a>
+      </nav>
+
+      <div class="lang">
+        <span data-i18n="language">Language</span>
+        <button type="button" class="small-button" onclick="setLanguage('en')">
+          EN
+        </button>
+        <button type="button" class="small-button" onclick="setLanguage('lv')">
+          LV
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="detail">
+        <h1 data-i18n="profile">Profile</h1>
+        <div id="profileInfo"></div>
+      </section>
+
+      <h2 data-i18n="history">Reservation history</h2>
+      <section class="sessions" id="reservationList"></section>
+    </main>
+
+    <footer class="footer">&copy; 2026 Kino Programma</footer>
+    <script src="js/script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-label="Dark cinema hall">
+  <rect width="1200" height="600" fill="#0d1117"/>
+  <rect x="120" y="70" width="960" height="270" rx="14" fill="#1f2937"/>
+  <rect x="160" y="105" width="880" height="200" rx="8" fill="#e5e7eb"/>
+  <path d="M0 600h1200L980 360H220z" fill="#090c11"/>
+  <g fill="#e11d48" opacity=".8">
+    <rect x="180" y="430" width="90" height="58" rx="10"/>
+    <rect x="310" y="410" width="90" height="70" rx="10"/>
+    <rect x="440" y="430" width="90" height="58" rx="10"/>
+    <rect x="570" y="410" width="90" height="70" rx="10"/>
+    <rect x="700" y="430" width="90" height="58" rx="10"/>
+    <rect x="830" y="410" width="90" height="70" rx="10"/>
+    <rect x="960" y="430" width="90" height="58" rx="10"/>
+  </g>
+  <g fill="#f59e0b" opacity=".75">
+    <circle cx="180" cy="50" r="12"/>
+    <circle cx="1020" cy="50" r="12"/>
+    <path d="M180 62l230 270h-80z"/>
+    <path d="M1020 62L790 332h80z"/>
+  </g>
+</svg>

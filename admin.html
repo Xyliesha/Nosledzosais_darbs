@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Kino Programma - Admin</title>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="index.html">Kino Programma</a>
+
+      <nav>
+        <a href="index.html" data-i18n="movies">Movies</a>
+        <a href="profile.html" data-i18n="profile">Profile</a>
+        <a href="admin.html" data-i18n="admin">Admin</a>
+        <a href="#" id="logoutLink" data-i18n="logout">Logout</a>
+      </nav>
+
+      <div class="lang">
+        <span data-i18n="language">Language</span>
+        <button type="button" class="small-button" onclick="setLanguage('en')">
+          EN
+        </button>
+        <button type="button" class="small-button" onclick="setLanguage('lv')">
+          LV
+        </button>
+      </div>
+    </header>
+
+    <main class="container">
+      <h1 data-i18n="admin_panel">Admin panel</h1>
+
+      <section class="stats">
+        <div class="stat detail" id="totalUsers"></div>
+        <div class="stat detail" id="totalReservations"></div>
+        <div class="stat detail" id="popularMovie"></div>
+      </section>
+
+      <h2 data-i18n="movie_management">Movie management</h2>
+
+      <form class="admin-form" id="movieForm">
+        <input type="hidden" name="id" id="movieId" value="0" />
+
+        <label>
+          <span data-i18n="title">Title</span>
+          <input name="title" id="movieTitle" required />
+        </label>
+
+        <label>
+          <span data-i18n="genre">Genre</span>
+          <select name="genre_id" id="movieGenre" required></select>
+        </label>
+
+        <label>
+          Description EN
+          <textarea
+            name="description_en"
+            id="descriptionEn"
+            required
+          ></textarea>
+        </label>
+
+        <label>
+          Description LV
+          <textarea
+            name="description_lv"
+            id="descriptionLv"
+            required
+          ></textarea>
+        </label>
+
+        <label>
+          <span data-i18n="duration">Duration</span>
+          <input
+            type="number"
+            name="duration"
+            id="duration"
+            min="1"
+            value="90"
+            required
+          />
+        </label>
+
+        <label>
+          <span data-i18n="poster">Poster path</span>
+          <input name="poster" id="poster" value="images/Drama.jpg" />
+        </label>
+
+        <label>
+          <span data-i18n="age">Age restriction</span>
+          <input
+            name="age_restriction"
+            id="ageRestriction"
+            value="12+"
+            required
+          />
+        </label>
+
+        <button type="submit" data-i18n="save">Save</button>
+      </form>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="title">Title</th>
+              <th data-i18n="genre">Genre</th>
+              <th data-i18n="duration">Duration</th>
+              <th data-i18n="age">Age restriction</th>
+              <th data-i18n="actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="movieTable"></tbody>
+        </table>
+      </div>
+
+      <h2 data-i18n="session_management">Session management</h2>
+
+      <form class="admin-form" id="sessionForm">
+        <label>
+          <span data-i18n="title">Title</span>
+          <select name="movie_id" id="sessionMovie"></select>
+        </label>
+
+        <label>
+          <span data-i18n="date">Date</span>
+          <input type="datetime-local" name="show_time" required />
+        </label>
+
+        <label>
+          <span data-i18n="hall">Hall</span>
+          <input name="hall" required />
+        </label>
+
+        <label>
+          <span data-i18n="price">Price</span>
+          <input type="number" name="price" min="0" step="0.01" required />
+        </label>
+
+        <label>
+          <span data-i18n="seats">Seats</span>
+          <input type="number" name="seats_total" min="1" value="60" required />
+        </label>
+
+        <button type="submit" data-i18n="add_session">Add session</button>
+      </form>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="title">Title</th>
+              <th data-i18n="date">Date</th>
+              <th data-i18n="hall">Hall</th>
+              <th data-i18n="actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="sessionTable"></tbody>
+        </table>
+      </div>
+    </main>
+
+    <footer class="footer">&copy; 2026 Kino Programma</footer>
+    <script src="js/script.js"></script>
+  </body>
+</html>
