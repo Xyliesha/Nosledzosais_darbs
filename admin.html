@@ -9,13 +9,17 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="index.html">Kino Programma</a>
+      <a class="brand" href="index.html">Kino</a>
+      <button type="button" class="menu-button" onclick="toggleMenu()">
+        <span class="nav-icon icon-menu" aria-hidden="true"></span>
+        <span data-i18n="menu">Menu</span>
+      </button>
 
-      <nav>
-        <a href="index.html" data-i18n="movies">Movies</a>
-        <a href="profile.html" data-i18n="profile">Profile</a>
-        <a href="admin.html" data-i18n="admin">Admin</a>
-        <a href="#" id="logoutLink" data-i18n="logout">Logout</a>
+      <nav id="mainNav">
+        <a href="index.html"><span class="nav-icon icon-movies" aria-hidden="true"></span><span data-i18n="movies">Movies</span></a>
+        <a href="profile.html"><span class="nav-icon icon-profile" aria-hidden="true"></span><span data-i18n="profile">Profile</span></a>
+        <a href="admin.html" class="admin-link"><span class="nav-icon icon-admin" aria-hidden="true"></span><span data-i18n="admin">Admin</span></a>
+        <a href="#" id="logoutLink" class="user-link"><span class="nav-icon icon-logout" aria-hidden="true"></span><span data-i18n="logout">Logout</span></a>
       </nav>
 
       <div class="lang">
@@ -29,8 +33,9 @@
       </div>
     </header>
 
-    <main class="container">
+    <main class="container" id="adminContent" style="display: none">
       <h1 data-i18n="admin_panel">Admin panel</h1>
+      <p id="message"></p>
 
       <section class="stats">
         <div class="stat detail">
@@ -96,7 +101,6 @@
             name="duration"
             id="duration"
             min="1"
-            value="90"
             placeholder="Example: 120"
             required
           />
@@ -107,7 +111,6 @@
           <input
             name="poster"
             id="poster"
-            value="images/Drama.jpg"
             placeholder="images/project_hail_mary.jpg"
             required
           />
@@ -119,7 +122,6 @@
           <input
             name="age_restriction"
             id="ageRestriction"
-            value="12+"
             placeholder="Example: 7+, 12+, 16+, 18+"
             required
           />
@@ -199,6 +201,25 @@
             </tr>
           </thead>
           <tbody id="sessionTable"></tbody>
+        </table>
+      </div>
+
+      <h2 data-i18n="reservation_management">Reservation management</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th data-i18n="customer">Customer</th>
+              <th data-i18n="title">Title</th>
+              <th data-i18n="date">Date</th>
+              <th data-i18n="tickets">Tickets</th>
+              <th data-i18n="price">Price</th>
+              <th data-i18n="status">Status</th>
+              <th data-i18n="actions">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="adminReservationTable"></tbody>
         </table>
       </div>
     </main>

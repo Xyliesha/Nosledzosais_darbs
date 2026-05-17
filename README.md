@@ -60,6 +60,8 @@ Administrators:
 - E-pasts: `admin@kino.test`
 - Parole: `password`
 
+Administrācijas panelis ir pieejams tikai pēc pieslēgšanās ar šo administratora kontu.
+
 Parasts lietotājs:
 
 - E-pasts: `user@kino.test`

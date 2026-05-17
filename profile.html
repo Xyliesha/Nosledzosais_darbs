@@ -9,13 +9,17 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="index.html">Kino Programma</a>
+      <a class="brand" href="index.html">Kino</a>
+      <button type="button" class="menu-button" onclick="toggleMenu()">
+        <span class="nav-icon icon-menu" aria-hidden="true"></span>
+        <span data-i18n="menu">Menu</span>
+      </button>
 
-      <nav>
-        <a href="index.html" data-i18n="movies">Movies</a>
-        <a href="profile.html" data-i18n="profile">Profile</a>
-        <a href="admin.html" class="admin-link" data-i18n="admin">Admin</a>
-        <a href="#" id="logoutLink" data-i18n="logout">Logout</a>
+      <nav id="mainNav">
+        <a href="index.html"><span class="nav-icon icon-movies" aria-hidden="true"></span><span data-i18n="movies">Movies</span></a>
+        <a href="profile.html"><span class="nav-icon icon-profile" aria-hidden="true"></span><span data-i18n="profile">Profile</span></a>
+        <a href="admin.html" class="admin-link"><span class="nav-icon icon-admin" aria-hidden="true"></span><span data-i18n="admin">Admin</span></a>
+        <a href="#" id="logoutLink" class="user-link"><span class="nav-icon icon-logout" aria-hidden="true"></span><span data-i18n="logout">Logout</span></a>
       </nav>
 
       <div class="lang">
@@ -35,7 +39,7 @@
         <div id="profileInfo"></div>
       </section>
 
-      <h2 data-i18n="history">Reservation history</h2>
+      <h2 data-i18n="my_reservations">My reservations</h2>
       <section class="sessions" id="reservationList"></section>
     </main>
 

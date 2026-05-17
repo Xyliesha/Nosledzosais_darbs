@@ -64,7 +64,13 @@ if ($action == 'movie') {
     $stmt->execute(array($id));
     $movie = $stmt->fetch();
 
-    $stmt = $pdo->prepare('SELECT * FROM sessions WHERE movie_id = ? ORDER BY show_time');
+    $stmt = $pdo->prepare("SELECT sessions.*,
+                                  GREATEST(sessions.seats_total - COALESCE(SUM(CASE WHEN reservations.status != 'cancelled' THEN reservations.tickets ELSE 0 END), 0), 0) AS seats_available
+                           FROM sessions
+                           LEFT JOIN reservations ON reservations.session_id = sessions.id
+                           WHERE sessions.movie_id = ?
+                           GROUP BY sessions.id
+                           ORDER BY sessions.show_time");
     $stmt->execute(array($id));
 
     answer(array('success' => true, 'movie' => $movie, 'sessions' => $stmt->fetchAll()));
@@ -96,7 +102,11 @@ if ($action == 'login') {
     $stmt->execute(array($email));
     $user = $stmt->fetch();
 
-    if ($user && password_verify($password, $user['password'])) {
+    if (!$user) {
+        answer(array('success' => false, 'message' => 'email_not_found'));
+    }
+
+    if (password_verify($password, $user['password'])) {
         $_SESSION['user'] = array(
             'id' => $user['id'],
             'name' => $user['name'],
@@ -106,7 +116,7 @@ if ($action == 'login') {
         answer(array('success' => true, 'user' => $_SESSION['user']));
     }
 
-    answer(array('success' => false, 'message' => 'invalid_login'));
+    answer(array('success' => false, 'message' => 'wrong_password'));
 }
 
 if ($action == 'logout') {
@@ -132,12 +142,23 @@ if ($action == 'reserve') {
         $tickets = 10;
     }
 
-    $stmt = $pdo->prepare('SELECT price FROM sessions WHERE id = ?');
+    $stmt = $pdo->prepare('SELECT * FROM sessions WHERE id = ?');
     $stmt->execute(array($sessionId));
     $session = $stmt->fetch();
 
     if (!$session) {
         answer(array('success' => false, 'message' => 'session_not_found'));
+    }
+
+    $stmt = $pdo->prepare("SELECT COALESCE(SUM(tickets), 0) AS taken
+                           FROM reservations
+                           WHERE session_id = ? AND status != 'cancelled'");
+    $stmt->execute(array($sessionId));
+    $taken = $stmt->fetch();
+    $seatsAvailable = max((int)$session['seats_total'] - (int)$taken['taken'], 0);
+
+    if ($tickets > $seatsAvailable) {
+        answer(array('success' => false, 'message' => 'not_enough_seats', 'available' => $seatsAvailable));
     }
 
     $total = $tickets * $session['price'];
@@ -175,9 +196,15 @@ if ($action == 'cancel_reservation') {
 if ($action == 'admin_data') {
     requireAdmin();
 
-    $movies = $pdo->query('SELECT movies.*, genres.name_en FROM movies JOIN genres ON movies.genre_id = genres.id ORDER BY movies.title')->fetchAll();
+    $movies = $pdo->query('SELECT movies.*, genres.name_en, genres.name_lv FROM movies JOIN genres ON movies.genre_id = genres.id ORDER BY movies.title')->fetchAll();
     $genres = $pdo->query('SELECT * FROM genres ORDER BY name_en')->fetchAll();
     $sessions = $pdo->query('SELECT sessions.*, movies.title FROM sessions JOIN movies ON sessions.movie_id = movies.id ORDER BY sessions.show_time')->fetchAll();
+    $reservationList = $pdo->query("SELECT reservations.*, users.name, users.email, sessions.show_time, sessions.hall, movies.title
+                                    FROM reservations
+                                    JOIN users ON reservations.user_id = users.id
+                                    JOIN sessions ON reservations.session_id = sessions.id
+                                    JOIN movies ON sessions.movie_id = movies.id
+                                    ORDER BY reservations.created_at DESC")->fetchAll();
     $users = $pdo->query('SELECT COUNT(*) AS total FROM users')->fetch();
     $reservations = $pdo->query('SELECT COUNT(*) AS total FROM reservations')->fetch();
     $popular = $pdo->query("SELECT movies.title, COALESCE(SUM(reservations.tickets), 0) AS tickets
@@ -193,10 +220,63 @@ if ($action == 'admin_data') {
         'movies' => $movies,
         'genres' => $genres,
         'sessions' => $sessions,
+        'reservations' => $reservationList,
         'totalUsers' => $users['total'],
         'totalReservations' => $reservations['total'],
         'popularMovie' => $popular ? $popular['title'] : '-'
     ));
+}
+
+if ($action == 'update_reservation_status') {
+    requireAdmin();
+
+    $id = (int)($_POST['id'] ?? 0);
+    $status = trim($_POST['status'] ?? '');
+    $allowed = array('pending', 'paid', 'cancelled');
+
+    if ($id < 1 || !in_array($status, $allowed)) {
+        answer(array('success' => false, 'message' => 'invalid_reservation_data'));
+    }
+
+    $stmt = $pdo->prepare('SELECT * FROM reservations WHERE id = ?');
+    $stmt->execute(array($id));
+    $reservation = $stmt->fetch();
+
+    if (!$reservation) {
+        answer(array('success' => false, 'message' => 'reservation_not_found'));
+    }
+
+    if ($status != 'cancelled') {
+        $stmt = $pdo->prepare('SELECT * FROM sessions WHERE id = ?');
+        $stmt->execute(array($reservation['session_id']));
+        $session = $stmt->fetch();
+
+        $stmt = $pdo->prepare("SELECT COALESCE(SUM(tickets), 0) AS taken
+                               FROM reservations
+                               WHERE session_id = ? AND id != ? AND status != 'cancelled'");
+        $stmt->execute(array($reservation['session_id'], $id));
+        $taken = $stmt->fetch();
+        $seatsAvailable = max((int)$session['seats_total'] - (int)$taken['taken'], 0);
+
+        if ((int)$reservation['tickets'] > $seatsAvailable) {
+            answer(array('success' => false, 'message' => 'not_enough_seats', 'available' => $seatsAvailable));
+        }
+    }
+
+    $stmt = $pdo->prepare('UPDATE reservations SET status = ? WHERE id = ?');
+    $stmt->execute(array($status, $id));
+
+    answer(array('success' => true));
+}
+
+if ($action == 'delete_reservation') {
+    requireAdmin();
+
+    $id = (int)($_POST['id'] ?? 0);
+    $stmt = $pdo->prepare('DELETE FROM reservations WHERE id = ?');
+    $stmt->execute(array($id));
+
+    answer(array('success' => true));
 }
 
 if ($action == 'save_movie') {

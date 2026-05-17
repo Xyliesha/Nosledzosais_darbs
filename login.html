@@ -9,12 +9,16 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="index.html">Kino Programma</a>
+      <a class="brand" href="index.html">Kino</a>
+      <button type="button" class="menu-button" onclick="toggleMenu()">
+        <span class="nav-icon icon-menu" aria-hidden="true"></span>
+        <span data-i18n="menu">Menu</span>
+      </button>
 
-      <nav>
-        <a href="index.html" data-i18n="movies">Movies</a>
-        <a href="login.html" data-i18n="login">Login</a>
-        <a href="register.html" data-i18n="register">Register</a>
+      <nav id="mainNav">
+        <a href="index.html"><span class="nav-icon icon-movies" aria-hidden="true"></span><span data-i18n="movies">Movies</span></a>
+        <a href="login.html"><span class="nav-icon icon-login" aria-hidden="true"></span><span data-i18n="login">Login</span></a>
+        <a href="register.html"><span class="nav-icon icon-register" aria-hidden="true"></span><span data-i18n="register">Register</span></a>
       </nav>
 
       <div class="lang">

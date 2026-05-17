@@ -1,6 +1,20 @@
 var currentUser = null;
 var currentLang = localStorage.getItem("lang") || "en";
 var adminMovies = [];
+var defaultGenres = [
+  { id: 1, name_en: "Action", name_lv: "Spriedze" },
+  { id: 2, name_en: "Horror", name_lv: "Sausmu" },
+  { id: 3, name_en: "Comedy", name_lv: "Komedija" },
+  { id: 4, name_en: "Drama", name_lv: "Drama" },
+  { id: 5, name_en: "Science Fiction", name_lv: "Zinatniska fantastika" },
+  { id: 6, name_en: "Family Adventure", name_lv: "Gimenes piedzivojums" },
+  { id: 7, name_en: "Animation", name_lv: "Animacija" },
+  { id: 8, name_en: "Fantasy", name_lv: "Fantazija" },
+  { id: 9, name_en: "Romance", name_lv: "Romantika" },
+  { id: 10, name_en: "Thriller", name_lv: "Trilleris" },
+  { id: 11, name_en: "Crime", name_lv: "Kriminalfilma" },
+  { id: 12, name_en: "Documentary", name_lv: "Dokumentala filma" },
+];
 
 var words = {
   en: {
@@ -10,6 +24,7 @@ var words = {
     logout: "Logout",
     profile: "Profile",
     admin: "Admin",
+    menu: "Menu",
     language: "Language",
     welcome: "Browse movies, choose a session, and reserve cinema tickets.",
     search: "Search",
@@ -19,14 +34,17 @@ var words = {
     sessions: "Sessions",
     reserve: "Reserve",
     tickets: "Tickets",
+    seats_available: "Seats available",
     fake_payment: "Fake payment confirmation",
     email: "Email",
     password: "Password",
     name: "Name",
     history: "Reservation history",
+    my_reservations: "My reservations",
     admin_panel: "Admin panel",
     movie_management: "Movie management",
     session_management: "Session management",
+    reservation_management: "Reservation management",
     total_users: "Total users",
     total_reservations: "Total reservations",
     popular_movie: "Most popular movie",
@@ -45,6 +63,10 @@ var words = {
     hall: "Hall",
     price: "Price",
     status: "Status",
+    customer: "Customer",
+    pending: "Pending",
+    paid: "Paid",
+    cancelled: "Cancelled",
     cancel: "Cancel",
     save: "Save",
     delete: "Delete",
@@ -55,13 +77,24 @@ var words = {
     add_session: "Add session",
     no_movies: "No movies found.",
     invalid_login: "Invalid email or password.",
+    email_not_found: "No account with this email was found.",
+    wrong_password: "Password is not correct.",
     invalid_data: "Please enter valid data.",
     email_exists: "Email already exists.",
     success_register: "Registration successful. You can login now.",
     login_required: "Please login first.",
     access_denied: "Access denied.",
     reserved: "Reservation saved.",
-    saved: "Saved.",
+    not_enough_seats: "Not enough free seats for this session.",
+    reservation_failed: "Could not save the reservation. Please try again.",
+    invalid_session_data: "Please enter valid session data.",
+    invalid_movie_data: "Please enter valid movie data.",
+    invalid_reservation_data: "Please enter valid reservation data.",
+    session_not_found: "Session was not found.",
+    reservation_not_found: "Reservation was not found.",
+    no_reservations: "No reservations yet.",
+    status_updated: "Reservation status updated.",
+    saved: "Saved in database.",
   },
   lv: {
     movies: "Filmas",
@@ -70,6 +103,7 @@ var words = {
     logout: "Iziet",
     profile: "Profils",
     admin: "Administrācija",
+    menu: "Izvēlne",
     language: "Valoda",
     welcome: "Pārlūko filmas, izvēlies seansu un rezervē kino biļetes.",
     search: "Meklēt",
@@ -79,14 +113,17 @@ var words = {
     sessions: "Seansi",
     reserve: "Rezervēt",
     tickets: "Biļetes",
+    seats_available: "Brīvas vietas",
     fake_payment: "Viltus maksājuma apstiprinājums",
     email: "E-pasts",
     password: "Parole",
     name: "Vārds",
     history: "Rezervāciju vēsture",
+    my_reservations: "Manas rezervācijas",
     admin_panel: "Administrācijas panelis",
     movie_management: "Filmu pārvaldība",
     session_management: "Seansu pārvaldība",
+    reservation_management: "Rezervāciju pārvaldība",
     total_users: "Lietotāji kopā",
     total_reservations: "Rezervācijas kopā",
     popular_movie: "Populārākā filma",
@@ -105,6 +142,10 @@ var words = {
     hall: "Zāle",
     price: "Cena",
     status: "Statuss",
+    customer: "Klients",
+    pending: "Gaida",
+    paid: "Apmaksāts",
+    cancelled: "Atcelts",
     cancel: "Atcelt",
     save: "Saglabāt",
     delete: "Dzēst",
@@ -115,13 +156,24 @@ var words = {
     add_session: "Pievienot seansu",
     no_movies: "Filmas nav atrastas.",
     invalid_login: "Nepareizs e-pasts vai parole.",
+    email_not_found: "Konts ar šo e-pastu nav atrasts.",
+    wrong_password: "Parole nav pareiza.",
     invalid_data: "Ievadi derīgus datus.",
     email_exists: "E-pasts jau eksistē.",
     success_register: "Reģistrācija veiksmīga. Tagad vari pieslēgties.",
     login_required: "Vispirms pieslēdzies.",
     access_denied: "Piekļuve liegta.",
     reserved: "Rezervācija saglabāta.",
-    saved: "Saglabāts.",
+    not_enough_seats: "Šim seansam nav pietiekami brīvu vietu.",
+    reservation_failed: "Neizdevās saglabāt rezervāciju. Mēģini vēlreiz.",
+    invalid_session_data: "Ievadi derīgus seansa datus.",
+    invalid_movie_data: "Ievadi derīgus filmas datus.",
+    invalid_reservation_data: "Ievadi derīgus rezervācijas datus.",
+    session_not_found: "Seanss nav atrasts.",
+    reservation_not_found: "Rezervācija nav atrasta.",
+    no_reservations: "Rezervāciju vēl nav.",
+    status_updated: "Rezervācijas statuss atjaunināts.",
+    saved: "Saglabāts datubāzē.",
   },
 };
 
@@ -137,6 +189,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function text(key) {
   return words[currentLang][key] || key;
+}
+
+function messageText(key, data) {
+  if (!key) {
+    return text("invalid_data");
+  }
+
+  if (key == "not_enough_seats" && data && data.available !== undefined) {
+    return text(key) + " " + text("seats_available") + ": " + data.available + ".";
+  }
+
+  return text(key);
 }
 
 function setLanguage(lang) {
@@ -159,6 +223,11 @@ function translatePage() {
   if (searchInput) {
     searchInput.placeholder =
       currentLang == "lv" ? "Meklēt pēc nosaukuma" : "Search by title";
+  }
+
+  var genreSelect = document.getElementById("genreSelect");
+  if (genreSelect) {
+    renderGenreOptions(genreSelect, defaultGenres, genreSelect.value, true);
   }
 }
 
@@ -215,6 +284,13 @@ function updateMenu() {
   }
 }
 
+function toggleMenu() {
+  var nav = document.getElementById("mainNav");
+  if (nav) {
+    nav.classList.toggle("is-open");
+  }
+}
+
 function startPage() {
   var page = location.pathname.split("/").pop();
 
@@ -257,16 +333,32 @@ function loadGenres() {
     return;
   }
 
-  api("genres").then(function (data) {
-    select.innerHTML = '<option value="0">' + text("all_genres") + "</option>";
+  renderGenreOptions(select, defaultGenres, select.value, true);
 
-    for (var i = 0; i < data.genres.length; i++) {
-      var genre = data.genres[i];
-      var name = currentLang == "lv" ? genre.name_lv : genre.name_en;
-      select.innerHTML +=
-        '<option value="' + genre.id + '">' + escapeHtml(name) + "</option>";
-    }
+  api("genres").then(function (data) {
+    var genres = data.genres && data.genres.length ? data.genres : defaultGenres;
+
+    renderGenreOptions(select, genres, select.value, true);
   });
+}
+
+function renderGenreOptions(select, genres, selectedValue, showAllOption) {
+  select.innerHTML = "";
+
+  if (showAllOption) {
+    select.innerHTML = '<option value="0">' + text("all_genres") + "</option>";
+  }
+
+  for (var i = 0; i < genres.length; i++) {
+    var genre = genres[i];
+    var name = currentLang == "lv" ? genre.name_lv : genre.name_en;
+    select.innerHTML +=
+      '<option value="' + genre.id + '">' + escapeHtml(name) + "</option>";
+  }
+
+  if (selectedValue) {
+    select.value = selectedValue;
+  }
 }
 
 function loadMovies() {
@@ -395,6 +487,8 @@ function loadMoviePage() {
       sessions.innerHTML = "";
       for (var i = 0; i < data.sessions.length; i++) {
         var session = data.sessions[i];
+        var seatsAvailable = Number(session.seats_available || session.seats_total || 0);
+        var buttonsDisabled = seatsAvailable < 1 ? " disabled" : "";
         sessions.innerHTML +=
           '<div class="session-row">' +
           "<div>" +
@@ -410,21 +504,36 @@ function loadMoviePage() {
           ": EUR " +
           session.price +
           "</p>" +
+          "<p>" +
+          text("seats_available") +
+          ": " +
+          seatsAvailable +
+          "</p>" +
           "<label>" +
           text("tickets") +
-          '<input type="number" min="1" max="10" value="1" id="tickets-' +
+          '<input type="number" min="1" max="' +
+          Math.min(10, seatsAvailable) +
+          '" value="' +
+          (seatsAvailable > 0 ? "1" : "0") +
+          '" id="tickets-' +
           session.id +
-          '"></label>' +
+          '"' +
+          buttonsDisabled +
+          "></label>" +
           "</div>" +
           '<div class="actions">' +
           '<button onclick="reserveTickets(' +
           session.id +
-          ', false)">' +
+          ', false)"' +
+          buttonsDisabled +
+          ">" +
           text("reserve") +
           "</button>" +
           '<button class="secondary" onclick="reserveTickets(' +
           session.id +
-          ', true)">' +
+          ', true)"' +
+          buttonsDisabled +
+          ">" +
           text("fake_payment") +
           "</button>" +
           "</div>" +
@@ -435,8 +544,10 @@ function loadMoviePage() {
 
 function reserveTickets(sessionId, pay) {
   if (!currentUser) {
-    alert(text("login_required"));
-    window.location.href = "login.html";
+    showMessage(text("login_required"), true);
+    setTimeout(function () {
+      window.location.href = "login.html";
+    }, 900);
     return;
   }
 
@@ -444,7 +555,7 @@ function reserveTickets(sessionId, pay) {
   formData.append("session_id", sessionId);
   formData.append(
     "tickets",
-    document.getElementById("tickets-" + sessionId).value,
+    document.getElementById("tickets-" + sessionId).value
   );
 
   if (pay) {
@@ -453,8 +564,12 @@ function reserveTickets(sessionId, pay) {
 
   api("reserve", formData).then(function (data) {
     if (data.success) {
-      alert(text("reserved"));
-      window.location.href = "profile.html";
+      showMessage(text("reserved"), false);
+      setTimeout(function () {
+        window.location.href = "profile.html";
+      }, 700);
+    } else {
+      showMessage(messageText(data.message, data), true);
     }
   });
 }
@@ -471,7 +586,7 @@ function setupLogin() {
       if (data.success) {
         window.location.href = "profile.html";
       } else {
-        showMessage(text("invalid_login"), true);
+        showMessage(messageText(data.message), true);
       }
     });
   };
@@ -489,10 +604,8 @@ function setupRegister() {
       if (data.success) {
         showMessage(text("success_register"), false);
         form.reset();
-      } else if (data.message == "email_exists") {
-        showMessage(text("email_exists"), true);
       } else {
-        showMessage(text("invalid_data"), true);
+        showMessage(messageText(data.message), true);
       }
     });
   };
@@ -528,6 +641,11 @@ function loadProfilePage() {
     }
 
     list.innerHTML = "";
+    if (data.reservations.length == 0) {
+      list.innerHTML = '<p class="empty">' + text("no_reservations") + "</p>";
+      return;
+    }
+
     for (var i = 0; i < data.reservations.length; i++) {
       var item = data.reservations[i];
       list.innerHTML +=
@@ -552,7 +670,7 @@ function loadProfilePage() {
         "<p>" +
         text("status") +
         ": " +
-        escapeHtml(item.status) +
+        statusLabel(item.status) +
         "</p>" +
         '<button class="danger" onclick="cancelReservation(' +
         item.id +
@@ -576,36 +694,54 @@ function cancelReservation(id) {
 function loadAdminPage() {
   api("admin_data").then(function (data) {
     if (!data.success) {
-      alert(text("access_denied"));
       window.location.href = "index.html";
       return;
     }
 
-        document.getElementById("totalUsers").textContent = data.totalUsers;
-        document.getElementById("totalReservations").textContent = data.totalReservations;
-        document.getElementById("popularMovie").textContent = data.popularMovie;
+    var adminContent = document.getElementById("adminContent");
+    if (adminContent) {
+      adminContent.style.display = "";
+    }
+
+    document.getElementById("totalUsers").textContent = data.totalUsers;
+    document.getElementById("totalReservations").textContent = data.totalReservations;
+    document.getElementById("popularMovie").textContent = data.popularMovie;
 
     fillAdminSelects(data);
     fillMovieTable(data.movies);
     fillSessionTable(data.sessions);
+    fillReservationTable(data.reservations);
   });
 
   var movieForm = document.getElementById("movieForm");
   movieForm.onsubmit = function (event) {
     event.preventDefault();
-    api("save_movie", new FormData(movieForm)).then(function () {
-      movieForm.reset();
-      document.getElementById("movieId").value = 0;
-      loadAdminPage();
+    api("save_movie", new FormData(movieForm)).then(function (data) {
+      if (data.success) {
+        showMessage(text("saved"), false);
+        movieForm.reset();
+        document.getElementById("movieId").value = 0;
+        document.getElementById("duration").value = "";
+        document.getElementById("ageRestriction").value = "";
+        document.getElementById("poster").value = "";
+        loadAdminPage();
+      } else {
+        showMessage(messageText(data.message), true);
+      }
     });
   };
 
   var sessionForm = document.getElementById("sessionForm");
   sessionForm.onsubmit = function (event) {
     event.preventDefault();
-    api("add_session", new FormData(sessionForm)).then(function () {
-      sessionForm.reset();
-      loadAdminPage();
+    api("add_session", new FormData(sessionForm)).then(function (data) {
+      if (data.success) {
+        showMessage(text("saved"), false);
+        sessionForm.reset();
+        loadAdminPage();
+      } else {
+        showMessage(messageText(data.message), true);
+      }
     });
   };
 }
@@ -613,16 +749,9 @@ function loadAdminPage() {
 function fillAdminSelects(data) {
   var movieGenre = document.getElementById("movieGenre");
   var sessionMovie = document.getElementById("sessionMovie");
+  var genres = data.genres && data.genres.length ? data.genres : defaultGenres;
 
-  movieGenre.innerHTML = "";
-  for (var i = 0; i < data.genres.length; i++) {
-    movieGenre.innerHTML +=
-      '<option value="' +
-      data.genres[i].id +
-      '">' +
-      escapeHtml(data.genres[i].name_en) +
-      "</option>";
-  }
+  renderGenreOptions(movieGenre, genres, movieGenre.value, false);
 
   sessionMovie.innerHTML = "";
   for (var j = 0; j < data.movies.length; j++) {
@@ -648,7 +777,7 @@ function fillMovieTable(movies) {
       escapeHtml(movie.title) +
       "</td>" +
       "<td>" +
-      escapeHtml(movie.name_en) +
+      escapeHtml(currentLang == "lv" ? movie.name_lv : movie.name_en) +
       "</td>" +
       "<td>" +
       movie.duration +
@@ -739,14 +868,117 @@ function deleteSession(id) {
   });
 }
 
+function fillReservationTable(reservations) {
+  var table = document.getElementById("adminReservationTable");
+  if (!table) {
+    return;
+  }
+
+  table.innerHTML = "";
+  if (reservations.length == 0) {
+    table.innerHTML =
+      '<tr><td colspan="7">' + text("no_reservations") + "</td></tr>";
+    return;
+  }
+
+  for (var i = 0; i < reservations.length; i++) {
+    var item = reservations[i];
+    table.innerHTML +=
+      "<tr>" +
+      "<td>" +
+      escapeHtml(item.name) +
+      "<br><small>" +
+      escapeHtml(item.email) +
+      "</small></td>" +
+      "<td>" +
+      escapeHtml(item.title) +
+      "</td>" +
+      "<td>" +
+      formatDate(item.show_time) +
+      "</td>" +
+      "<td>" +
+      item.tickets +
+      "</td>" +
+      "<td>EUR " +
+      item.total_price +
+      "</td>" +
+      '<td><select onchange="updateReservationStatus(' +
+      item.id +
+      ', this.value)">' +
+      statusOption("pending", item.status) +
+      statusOption("paid", item.status) +
+      statusOption("cancelled", item.status) +
+      "</select></td>" +
+      '<td><button class="danger" onclick="deleteReservation(' +
+      item.id +
+      ')">' +
+      text("delete") +
+      "</button></td>" +
+      "</tr>";
+  }
+}
+
+function statusOption(value, current) {
+  return (
+    '<option value="' +
+    value +
+    '"' +
+    (value == current ? " selected" : "") +
+    ">" +
+    statusLabel(value) +
+    "</option>"
+  );
+}
+
+function updateReservationStatus(id, status) {
+  var formData = new FormData();
+  formData.append("id", id);
+  formData.append("status", status);
+
+  api("update_reservation_status", formData).then(function (data) {
+    if (data.success) {
+      showMessage(text("status_updated"), false);
+      loadAdminPage();
+    } else {
+      showMessage(messageText(data.message), true);
+    }
+  });
+}
+
+function deleteReservation(id) {
+  var formData = new FormData();
+  formData.append("id", id);
+
+  api("delete_reservation", formData).then(function (data) {
+    if (data.success) {
+      loadAdminPage();
+    } else {
+      showMessage(messageText(data.message), true);
+    }
+  });
+}
+
 function showMessage(message, isError) {
   var item = document.getElementById("message");
+  if (!item) {
+    item = document.createElement("p");
+    item.id = "message";
+    var container = document.querySelector(".container") || document.body;
+    container.insertBefore(item, container.firstChild);
+  }
+
   item.textContent = message;
-  item.className = isError ? "error" : "notice";
+  item.className = (isError ? "error" : "notice") + " page-message";
+  item.setAttribute("role", "status");
+  item.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
 function formatDate(value) {
   return value.replace("T", " ").substring(0, 16);
+}
+
+function statusLabel(status) {
+  return escapeHtml(text(status));
 }
 
 function escapeHtml(value) {
