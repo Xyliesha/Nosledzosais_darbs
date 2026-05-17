@@ -26,7 +26,7 @@ var words = {
     admin: "Admin",
     menu: "Menu",
     language: "Language",
-    hero_label: "Kino Programma",
+    hero_label: "Lumiere",
     hero_description:
       "Browse movies, choose sessions and reserve cinema tickets.",
     browse_movies: "Browse Movies",
@@ -69,6 +69,8 @@ var words = {
     total_users: "Total users",
     total_reservations: "Total reservations",
     popular_movie: "Most popular movie",
+    popular_movies: "Popular Movies",
+    reserved_tickets: "Reserved tickets",
     title: "Title",
     movie_title: "Movie title",
     description_en: "Description in English",
@@ -129,7 +131,7 @@ var words = {
     admin: "Administrācija",
     menu: "Izvēlne",
     language: "Valoda",
-    hero_label: "Kino programma",
+    hero_label: "Lumiere",
     hero_description:
       "Parluko filmas, izvelies seansus un rezerve kino biletes.",
     browse_movies: "Skatit filmas",
@@ -171,6 +173,8 @@ var words = {
     total_users: "Lietotāji kopā",
     total_reservations: "Rezervācijas kopā",
     popular_movie: "Populārākā filma",
+    popular_movies: "Populāras filmas",
+    reserved_tickets: "Rezervētas biļetes",
     title: "Nosaukums",
     movie_title: "Filmas nosaukums",
     description_en: "Apraksts angliski",
@@ -371,6 +375,7 @@ function startPage() {
 function loadHomePage() {
   loadGenres();
   loadMovies();
+  loadPopularMovies();
 
   var form = document.getElementById("searchForm");
   if (form) {
@@ -394,6 +399,69 @@ function loadGenres() {
       data.genres && data.genres.length ? data.genres : defaultGenres;
 
     renderGenreOptions(select, genres, select.value, true);
+  });
+}
+
+function loadPopularMovies() {
+  var list = document.getElementById("popularMovieList");
+  if (!list) {
+    return;
+  }
+
+  api("popular_movies").then(function (data) {
+    list.innerHTML = "";
+
+    if (!data.movies || data.movies.length == 0) {
+      list.innerHTML = '<p class="empty">' + text("no_movies") + "</p>";
+      return;
+    }
+
+    for (var i = 0; i < data.movies.length; i++) {
+      var movie = data.movies[i];
+      var genreName = currentLang == "lv" ? movie.name_lv : movie.name_en;
+      var description =
+        currentLang == "lv" ? movie.description_lv : movie.description_en;
+
+      list.innerHTML +=
+        '<article class="movie-card popular-card">' +
+        '<img class="movie-poster" src="' +
+        escapeHtml(movie.poster) +
+        '" alt="' +
+        escapeHtml(movie.title) +
+        ' poster">' +
+        '<div class="movie-body">' +
+        '<p class="tag">' +
+        escapeHtml(genreName) +
+        "</p>" +
+        "<h3>" +
+        escapeHtml(movie.title) +
+        "</h3>" +
+        '<div class="movie-meta">' +
+        "<span>" +
+        movie.duration +
+        " " +
+        text("minutes") +
+        "</span>" +
+        "<span>" +
+        escapeHtml(movie.age_restriction) +
+        "</span>" +
+        "<span>" +
+        text("reserved_tickets") +
+        ": " +
+        Number(movie.tickets_reserved || 0) +
+        "</span>" +
+        "</div>" +
+        "<p>" +
+        escapeHtml(description.substring(0, 90)) +
+        "...</p>" +
+        '<a class="button" href="movie.html?id=' +
+        movie.id +
+        '">' +
+        text("details") +
+        "</a>" +
+        "</div>" +
+        "</article>";
+    }
   });
 }
 

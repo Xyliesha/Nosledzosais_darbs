@@ -54,6 +54,24 @@ if ($action == 'movies') {
     answer(array('success' => true, 'movies' => $stmt->fetchAll()));
 }
 
+if ($action == 'popular_movies') {
+    $stmt = $pdo->query("SELECT movies.*, genres.name_en, genres.name_lv,
+                                COALESCE(popular.tickets_reserved, 0) AS tickets_reserved
+                         FROM movies
+                         JOIN genres ON movies.genre_id = genres.id
+                         LEFT JOIN (
+                            SELECT sessions.movie_id, SUM(reservations.tickets) AS tickets_reserved
+                            FROM sessions
+                            JOIN reservations ON reservations.session_id = sessions.id
+                            WHERE reservations.status != 'cancelled'
+                            GROUP BY sessions.movie_id
+                         ) AS popular ON popular.movie_id = movies.id
+                         ORDER BY tickets_reserved DESC, movies.title
+                         LIMIT 4");
+
+    answer(array('success' => true, 'movies' => $stmt->fetchAll()));
+}
+
 if ($action == 'movie') {
     $id = (int)($_GET['id'] ?? 0);
 

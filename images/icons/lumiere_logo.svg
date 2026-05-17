@@ -1,0 +1,41 @@
+<svg width="520" height="160" viewBox="0 0 520 160" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Lumière logo</title>
+  <desc id="desc">Elegant cinema projector logo with the text Lumière and slogan Stories in Light.</desc>
+
+  <rect width="520" height="160" rx="18" fill="transparent"/>
+
+  <!-- Projector icon -->
+  <g stroke="#674B36" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="65" cy="42" r="15"/>
+    <circle cx="105" cy="42" r="15"/>
+    <circle cx="65" cy="42" r="5" fill="#C7AE97" stroke="#674B36"/>
+    <circle cx="105" cy="42" r="5" fill="#C7AE97" stroke="#674B36"/>
+
+    <rect x="45" y="64" width="78" height="38" rx="4" fill="#FFF4E8"/>
+    <path d="M123 72L145 62V104L123 94V72Z" fill="#C7AE97"/>
+    <path d="M55 74H73"/>
+    <path d="M55 84H73"/>
+    <path d="M55 94H73"/>
+
+    <path d="M74 102L55 138"/>
+    <path d="M96 102L113 138"/>
+    <path d="M84 102V138"/>
+
+    <!-- Light rays -->
+    <path d="M151 70L190 55"/>
+    <path d="M151 83H199"/>
+    <path d="M151 96L190 112"/>
+  </g>
+
+  <!-- Brand name -->
+  <text x="215" y="82" font-family="Georgia, 'Times New Roman', serif" font-size="54" fill="#674B36" letter-spacing="1">
+    Lumière
+  </text>
+
+  <!-- Decorative lines and slogan -->
+  <g fill="#674B36" font-family="Arial, Helvetica, sans-serif" font-size="14" letter-spacing="5">
+    <line x1="215" y1="108" x2="270" y2="108" stroke="#C7AE97" stroke-width="2"/>
+    <text x="282" y="114">STORIES IN LIGHT</text>
+    <line x1="443" y1="108" x2="500" y2="108" stroke="#C7AE97" stroke-width="2"/>
+  </g>
+</svg>

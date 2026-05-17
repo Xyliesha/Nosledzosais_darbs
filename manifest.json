@@ -1,6 +1,6 @@
 {
-  "name": "Kino Programma",
-  "short_name": "Kino",
+  "name": "Lumiere",
+  "short_name": "Lumiere",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#0d1117",

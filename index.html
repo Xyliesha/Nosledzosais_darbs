@@ -4,13 +4,15 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#111827" />
-    <title>Kino Programma - Movies</title>
+    <title>Lumiere - Movies</title>
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="css/style.css" />
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="index.html">Kino</a>
+      <a class="brand" href="index.html" aria-label="Lumiere home">
+        <img src="images/icons/lumiere_logo.svg" alt="Lumiere" />
+      </a>
       <button type="button" class="menu-button" onclick="toggleMenu()">
         <img
           class="nav-icon"
@@ -125,14 +127,11 @@
       </div>
     </header>
 
-    <main class="container">
+    <main>
       <section class="hero">
         <div>
-          <p class="eyebrow" data-i18n="hero_label">Kino Programma</p>
-          <h1 data-i18n="movies">Movies</h1>
-          <p data-i18n="hero_description">
-            Browse movies, choose sessions and reserve cinema tickets.
-          </p>
+          <h1>Lumiere</h1>
+          <p>Stories in Light</p>
           <a
             class="button hero-button"
             href="#movieList"
@@ -142,46 +141,61 @@
         </div>
       </section>
 
-      <p class="info-note">
-        <span class="info-icon" aria-hidden="true">i</span>
-        <span data-i18n="cinema_hours">
-          The cinema opens 15 minutes before the first session and closes 15
-          minutes after the last session starts.
-        </span>
-      </p>
+      <div class="container">
+        <p class="info-note">
+          <span class="info-icon" aria-hidden="true">i</span>
+          <span data-i18n="cinema_hours">
+            The cinema opens 15 minutes before the first session and closes 15
+            minutes after the last session starts.
+          </span>
+        </p>
 
-      <form class="filters" id="searchForm">
-        <label>
-          <span data-i18n="search">Search</span>
-          <input type="search" id="searchInput" placeholder="Search by title" />
-        </label>
+        <form class="filters" id="searchForm">
+          <label>
+            <span data-i18n="search">Search</span>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="Search by title"
+            />
+          </label>
 
-        <label>
-          <span data-i18n="genre">Genre</span>
-          <select id="genreSelect">
-            <option value="0">All genres</option>
-            <option value="1">Action</option>
-            <option value="2">Horror</option>
-            <option value="3">Comedy</option>
-            <option value="4">Drama</option>
-            <option value="5">Science Fiction</option>
-            <option value="6">Family Adventure</option>
-            <option value="7">Animation</option>
-            <option value="8">Fantasy</option>
-            <option value="9">Romance</option>
-            <option value="10">Thriller</option>
-            <option value="11">Crime</option>
-            <option value="12">Documentary</option>
-          </select>
-        </label>
+          <label>
+            <span data-i18n="genre">Genre</span>
+            <select id="genreSelect">
+              <option value="0">All genres</option>
+              <option value="1">Action</option>
+              <option value="2">Horror</option>
+              <option value="3">Comedy</option>
+              <option value="4">Drama</option>
+              <option value="5">Science Fiction</option>
+              <option value="6">Family Adventure</option>
+              <option value="7">Animation</option>
+              <option value="8">Fantasy</option>
+              <option value="9">Romance</option>
+              <option value="10">Thriller</option>
+              <option value="11">Crime</option>
+              <option value="12">Documentary</option>
+            </select>
+          </label>
 
-        <button type="submit" data-i18n="search">Search</button>
-      </form>
+          <button type="submit" data-i18n="search">Search</button>
+        </form>
 
-      <section class="movie-grid" id="movieList"></section>
+        <section class="movie-grid" id="movieList"></section>
+
+        <section class="popular-section" aria-labelledby="popularMoviesTitle">
+          <div class="section-heading">
+            <h2 id="popularMoviesTitle" data-i18n="popular_movies">
+              Popular Movies
+            </h2>
+          </div>
+          <div class="popular-grid" id="popularMovieList"></div>
+        </section>
+      </div>
     </main>
 
-    <footer class="footer">&copy; 2026 Kino Programma</footer>
+    <footer class="footer">&copy; 2026 Lumiere</footer>
     <script src="js/script.js"></script>
   </body>
 </html>

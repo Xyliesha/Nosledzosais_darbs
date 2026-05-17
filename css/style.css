@@ -35,7 +35,7 @@ a {
   align-items: center;
   gap: 0;
   padding: 0 5%;
-  background: rgba(255, 250, 244, 0.96);
+  background: rgba(255, 250, 244, 0.94);
   border-bottom: 1px solid var(--line);
   position: sticky;
   top: 0;
@@ -46,14 +46,18 @@ a {
 .brand {
   display: grid;
   place-items: center;
-  min-width: 76px;
+  min-width: 120px;
   min-height: 78px;
-  padding: 0 16px;
-  color: var(--accent);
-  background: var(--accent-2);
-  font-size: 1.35rem;
-  font-weight: 700;
+  padding: 8px 14px;
+  background: transparent;
   text-decoration: none;
+}
+
+.brand img {
+  display: block;
+  width: 100%;
+  max-width: 112px;
+  height: auto;
 }
 
 nav,
@@ -152,49 +156,59 @@ nav a:hover,
 }
 
 .hero {
-  min-height: 280px;
+  position: relative;
+  min-height: calc(100vh - 79px);
   display: flex;
   align-items: center;
   margin-bottom: 28px;
-  padding: 42px;
+  padding: 64px 5%;
   background:
     linear-gradient(
-      135deg,
-      rgba(255, 250, 244, 0.92),
-      rgba(237, 232, 231, 0.86)
+      90deg,
+      rgba(0, 0, 0, 0.68),
+      rgba(0, 0, 0, 0.34) 55%,
+      rgba(0, 0, 0, 0.5)
     ),
-    linear-gradient(45deg, var(--panel-light), var(--accent-2));
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  box-shadow: 0 20px 45px rgba(103, 75, 54, 0.14);
+    url("../images/HeroSection.jpg") center / cover no-repeat;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 .hero > div {
-  max-width: 680px;
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  max-width: 1120px;
 }
 
 .hero h1 {
-  margin: 0 0 12px;
-  color: var(--text);
-  font-size: 3rem;
-  line-height: 1.05;
+  margin: 0 0 10px;
+  color: #fffaf4;
+  font-size: clamp(3.4rem, 9vw, 7.5rem);
+  line-height: 0.95;
+  font-weight: 700;
+  text-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
 }
 
 .hero p {
+  margin: 0;
   max-width: 640px;
-  color: var(--muted);
+  color: #f4e8dd;
+  font-size: clamp(1.3rem, 3vw, 2rem);
+  text-shadow: 0 4px 18px rgba(0, 0, 0, 0.42);
 }
 
 .hero-button {
-  margin-top: 14px;
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
+  margin-top: 28px;
+  background: #fffaf4;
+  border-color: #fffaf4;
+  color: var(--accent);
 }
 
 .hero-button:hover {
-  background: var(--muted);
-  border-color: var(--muted);
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+  color: white;
 }
 
 .info-note {
@@ -356,6 +370,37 @@ input:disabled {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 22px;
+}
+
+.popular-section {
+  margin-top: 42px;
+}
+
+.section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.section-heading h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: 1.8rem;
+  line-height: 1.15;
+}
+
+.popular-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 18px;
+}
+
+.popular-card .movie-body h3 {
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+  line-height: 1.2;
 }
 
 .movie-card,
@@ -585,7 +630,8 @@ th {
 
   .brand {
     min-height: 64px;
-    min-width: 68px;
+    min-width: 108px;
+    padding: 7px 0;
   }
 
   .menu-button {
@@ -614,10 +660,11 @@ th {
   }
 
   .hero {
-    padding: 22px;
+    min-height: calc(100vh - 139px);
+    padding: 48px 4%;
   }
 
   .hero h1 {
-    font-size: 2rem;
+    font-size: 3.4rem;
   }
 }

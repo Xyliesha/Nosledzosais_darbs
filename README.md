@@ -1,6 +1,6 @@
-# Kino Programma
+# Lumiere
 
-`Kino Programma` ir vienkārša kino biļešu rezervācijas tīmekļa vietne studentu noslēguma darbam.
+`Lumiere` ir vienkārša kino biļešu rezervācijas tīmekļa vietne studentu noslēguma darbam.
 
 Projekta priekšgals ir veidots ar parastu HTML, CSS un JavaScript. PHP tiek izmantots tikai datubāzes savienojumam un `api.php` failam, kas apstrādā pieprasījumus.
 
