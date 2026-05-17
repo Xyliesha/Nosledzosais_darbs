@@ -141,6 +141,51 @@
         </div>
       </section>
 
+      <section class="banner-section" aria-label="Cinema announcements">
+        <div class="banner-carousel" id="bannerCarousel">
+          <div class="banner-track" id="bannerTrack">
+            <div class="banner-slide is-active">
+              <img src="images/1.png" alt="Cinema banner 1" />
+            </div>
+
+            <div class="banner-slide">
+              <img src="images/2.png" alt="Cinema banner 2" />
+            </div>
+
+            <div class="banner-slide">
+              <img src="images/3.png" alt="Cinema banner 3" />
+            </div>
+
+            <div class="banner-slide">
+              <img src="images/4.png" alt="Cinema banner 4" />
+            </div>
+
+            <div class="banner-slide">
+              <img src="images/5.png" alt="Cinema banner 5" />
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="banner-arrow banner-prev"
+            id="bannerPrev"
+            aria-label="Previous banner"
+          >
+            &#8249;
+          </button>
+          <button
+            type="button"
+            class="banner-arrow banner-next"
+            id="bannerNext"
+            aria-label="Next banner"
+          >
+            &#8250;
+          </button>
+
+          <div class="banner-dots" id="bannerDots" aria-hidden="true"></div>
+        </div>
+      </section>
+
       <div class="container">
         <p class="info-note">
           <span class="info-icon" aria-hidden="true">i</span>
@@ -195,7 +240,18 @@
       </div>
     </main>
 
-    <footer class="footer">&copy; 2026 Lumiere</footer>
+    <footer class="footer">
+      <div class="footer-brand">
+        <strong>Lumiere</strong>
+        <span>Stories in Light</span>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="index.html" data-i18n="movies">Movies</a>
+        <a href="profile.html" data-i18n="profile">Profile</a>
+        <a href="admin.html" data-i18n="admin">Admin</a>
+      </nav>
+      <p>&copy; 2026</p>
+    </footer>
     <script src="js/script.js"></script>
   </body>
 </html>

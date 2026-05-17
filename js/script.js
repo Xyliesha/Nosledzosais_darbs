@@ -1,6 +1,7 @@
 var currentUser = null;
 var currentLang = localStorage.getItem("lang") || "en";
 var adminMovies = [];
+var searchTimer = null;
 var defaultGenres = [
   { id: 1, name_en: "Action", name_lv: "Spriedze" },
   { id: 2, name_en: "Horror", name_lv: "Sausmu" },
@@ -55,6 +56,9 @@ var words = {
     reserve: "Reserve",
     tickets: "Tickets",
     seats_available: "Seats available",
+    available: "Available",
+    few_seats_left: "Few seats left",
+    sold_out: "Sold out",
     seats_limit_error:
       "The selected number of tickets exceeds the number of seats in the hall.",
     email: "Email",
@@ -107,6 +111,7 @@ var words = {
     seats: "Seats",
     add_session: "Add session",
     no_movies: "No movies found.",
+    no_movies_hint: "Try another genre or search word.",
     invalid_login: "Invalid email or password.",
     email_not_found: "No account with this email was found.",
     wrong_password: "Password is not correct.",
@@ -166,6 +171,9 @@ var words = {
     reserve: "Rezervēt",
     tickets: "Biļetes",
     seats_available: "Brīvas vietas",
+    available: "Pieejams",
+    few_seats_left: "Maz vietu",
+    sold_out: "Izpārdots",
     seats_limit_error: "Izveletais bilešu skaits parsniedz vietu skaitu zale.",
     email: "E-pasts",
     password: "Parole",
@@ -216,6 +224,7 @@ var words = {
     seats: "Vietas",
     add_session: "Pievienot seansu",
     no_movies: "Filmas nav atrastas.",
+    no_movies_hint: "Izmēģini citu žanru vai meklēšanas vārdu.",
     invalid_login: "Nepareizs e-pasts vai parole.",
     email_not_found: "Konts ar šo e-pastu nav atrasts.",
     wrong_password: "Parole nav pareiza.",
@@ -242,6 +251,7 @@ var words = {
 document.addEventListener("DOMContentLoaded", function () {
   translatePage();
   checkLogin();
+  setupBannerCarousel();
   startPage();
 
   if ("serviceWorker" in navigator) {
@@ -361,6 +371,86 @@ function toggleMenu() {
   }
 }
 
+function setupBannerCarousel() {
+  var carousel = document.getElementById("bannerCarousel");
+  var slides = document.querySelectorAll(".banner-slide");
+  var dotsWrap = document.getElementById("bannerDots");
+  var prevButton = document.getElementById("bannerPrev");
+  var nextButton = document.getElementById("bannerNext");
+  var currentSlide = 0;
+  var autoplay = null;
+
+  if (
+    !carousel ||
+    slides.length == 0 ||
+    !dotsWrap ||
+    !prevButton ||
+    !nextButton
+  ) {
+    return;
+  }
+
+  for (var i = 0; i < slides.length; i++) {
+    var dot = document.createElement("span");
+    dot.className = "banner-dot";
+    dotsWrap.appendChild(dot);
+  }
+
+  var dots = document.querySelectorAll(".banner-dot");
+
+  function showSlide(index) {
+    if (index < 0) {
+      currentSlide = slides.length - 1;
+    } else if (index >= slides.length) {
+      currentSlide = 0;
+    } else {
+      currentSlide = index;
+    }
+
+    for (var j = 0; j < slides.length; j++) {
+      slides[j].classList.toggle("is-active", j == currentSlide);
+      dots[j].classList.toggle("is-active", j == currentSlide);
+    }
+  }
+
+  function nextSlide() {
+    showSlide(currentSlide + 1);
+  }
+
+  function previousSlide() {
+    showSlide(currentSlide - 1);
+  }
+
+  function startAutoplay() {
+    stopAutoplay();
+    autoplay = setInterval(nextSlide, 5000);
+  }
+
+  function stopAutoplay() {
+    if (autoplay) {
+      clearInterval(autoplay);
+    }
+  }
+
+  prevButton.onclick = function () {
+    previousSlide();
+    startAutoplay();
+  };
+
+  nextButton.onclick = function () {
+    nextSlide();
+    startAutoplay();
+  };
+
+  carousel.onmouseenter = stopAutoplay;
+  carousel.onmouseleave = startAutoplay;
+  carousel.onfocusin = stopAutoplay;
+  carousel.onfocusout = startAutoplay;
+
+  showSlide(0);
+  startAutoplay();
+}
+
 function startPage() {
   var page = location.pathname.split("/").pop();
 
@@ -396,6 +486,19 @@ function loadHomePage() {
       loadMovies();
     };
   }
+
+  var searchInput = document.getElementById("searchInput");
+  if (searchInput) {
+    searchInput.oninput = function () {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadMovies, 250);
+    };
+  }
+
+  var genreSelect = document.getElementById("genreSelect");
+  if (genreSelect) {
+    genreSelect.onchange = loadMovies;
+  }
 }
 
 function loadGenres() {
@@ -424,7 +527,7 @@ function loadPopularMovies() {
     list.innerHTML = "";
 
     if (!data.movies || data.movies.length == 0) {
-      list.innerHTML = '<p class="empty">' + text("no_movies") + "</p>";
+      list.innerHTML = emptyMoviesState();
       return;
     }
 
@@ -518,7 +621,8 @@ function loadMovies() {
       list.innerHTML = "";
 
       if (data.movies.length == 0) {
-        list.innerHTML = "<p>" + text("no_movies") + "</p>";
+        list.innerHTML = emptyMoviesState();
+        return;
       }
 
       for (var i = 0; i < data.movies.length; i++) {
@@ -563,6 +667,20 @@ function loadMovies() {
           "</article>";
       }
     });
+}
+
+function emptyMoviesState() {
+  return (
+    '<div class="empty-state">' +
+    '<span class="empty-state-icon" aria-hidden="true">🎬</span>' +
+    "<h2>" +
+    text("no_movies") +
+    "</h2>" +
+    "<p>" +
+    text("no_movies_hint") +
+    "</p>" +
+    "</div>"
+  );
 }
 
 function loadMoviePage() {
@@ -627,13 +745,25 @@ function loadMoviePage() {
           session.seats_available || session.seats_total || 0,
         );
         var buttonsDisabled = seatsAvailable < 1 ? " disabled" : "";
+        var sessionStatus = sessionStatusInfo(seatsAvailable);
         sessions.innerHTML +=
           '<div class="session-row">' +
           "<div>" +
-          "<strong>" +
-          formatDate(session.show_time) +
-          "</strong>" +
+          '<div class="session-heading">' +
+          '<span class="session-time-chip">' +
+          formatTime(session.show_time) +
+          "</span>" +
+          '<span class="session-status ' +
+          sessionStatus.className +
+          '">' +
+          text(sessionStatus.label) +
+          "</span>" +
+          "</div>" +
           "<p>" +
+          text("date") +
+          ": " +
+          formatDate(session.show_time) +
+          " | " +
           text("hall") +
           ": " +
           escapeHtml(session.hall) +
@@ -691,6 +821,18 @@ function checkTicketLimit(input) {
     showMessage(text("seats_limit_error"), true);
     input.value = maxTickets;
   }
+}
+
+function sessionStatusInfo(seatsAvailable) {
+  if (seatsAvailable < 1) {
+    return { label: "sold_out", className: "is-sold-out" };
+  }
+
+  if (seatsAvailable <= 10) {
+    return { label: "few_seats_left", className: "is-low" };
+  }
+
+  return { label: "available", className: "is-available" };
 }
 
 function reserveTickets(sessionId) {
@@ -1008,10 +1150,13 @@ function trailerButton(url) {
   }
 
   return (
-    '<a class="button trailer-button" href="' +
+    '<a class="trailer-button" href="' +
     escapeHtml(url) +
     '" target="_blank" rel="noopener noreferrer">' +
+    '<span class="trailer-play" aria-hidden="true"></span>' +
+    "<span>" +
     text("watch_trailer") +
+    "</span>" +
     "</a>"
   );
 }
@@ -1178,6 +1323,10 @@ function showMessage(message, isError) {
 
 function formatDate(value) {
   return value.replace("T", " ").substring(0, 16);
+}
+
+function formatTime(value) {
+  return value.replace("T", " ").substring(11, 16);
 }
 
 function statusLabel(status) {
