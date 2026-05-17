@@ -52,7 +52,8 @@ var words = {
     movie_title: "Movie title",
     description_en: "Description in English",
     description_lv: "Description in Latvian",
-    poster_help: "Put the poster file in the images folder and type its path here.",
+    poster_help:
+      "Put the poster file in the images folder and type its path here.",
     session_movie: "Movie for this session",
     session_datetime: "Session date and time",
     duration: "Duration",
@@ -197,7 +198,9 @@ function messageText(key, data) {
   }
 
   if (key == "not_enough_seats" && data && data.available !== undefined) {
-    return text(key) + " " + text("seats_available") + ": " + data.available + ".";
+    return (
+      text(key) + " " + text("seats_available") + ": " + data.available + "."
+    );
   }
 
   return text(key);
@@ -336,7 +339,8 @@ function loadGenres() {
   renderGenreOptions(select, defaultGenres, select.value, true);
 
   api("genres").then(function (data) {
-    var genres = data.genres && data.genres.length ? data.genres : defaultGenres;
+    var genres =
+      data.genres && data.genres.length ? data.genres : defaultGenres;
 
     renderGenreOptions(select, genres, select.value, true);
   });
@@ -487,7 +491,9 @@ function loadMoviePage() {
       sessions.innerHTML = "";
       for (var i = 0; i < data.sessions.length; i++) {
         var session = data.sessions[i];
-        var seatsAvailable = Number(session.seats_available || session.seats_total || 0);
+        var seatsAvailable = Number(
+          session.seats_available || session.seats_total || 0,
+        );
         var buttonsDisabled = seatsAvailable < 1 ? " disabled" : "";
         sessions.innerHTML +=
           '<div class="session-row">' +
@@ -555,7 +561,7 @@ function reserveTickets(sessionId, pay) {
   formData.append("session_id", sessionId);
   formData.append(
     "tickets",
-    document.getElementById("tickets-" + sessionId).value
+    document.getElementById("tickets-" + sessionId).value,
   );
 
   if (pay) {
@@ -704,7 +710,8 @@ function loadAdminPage() {
     }
 
     document.getElementById("totalUsers").textContent = data.totalUsers;
-    document.getElementById("totalReservations").textContent = data.totalReservations;
+    document.getElementById("totalReservations").textContent =
+      data.totalReservations;
     document.getElementById("popularMovie").textContent = data.popularMovie;
 
     fillAdminSelects(data);
