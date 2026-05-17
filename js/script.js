@@ -77,6 +77,11 @@ var words = {
     description_lv: "Description in Latvian",
     poster_help:
       "Put the poster file in the images folder and type its path here.",
+    trailer_url: "Trailer link",
+    trailer_placeholder: "https://www.youtube.com/watch?v=...",
+    trailer_help:
+      "Add a YouTube or official trailer link if the movie has one.",
+    watch_trailer: "Watch Trailer",
     session_movie: "Movie for this session",
     session_datetime: "Session date and time",
     duration: "Duration",
@@ -115,6 +120,7 @@ var words = {
     reservation_failed: "Could not save the reservation. Please try again.",
     invalid_session_data: "Please enter valid session data.",
     invalid_movie_data: "Please enter valid movie data.",
+    invalid_trailer_url: "Please enter a valid trailer link.",
     invalid_reservation_data: "Please enter valid reservation data.",
     session_not_found: "Session was not found.",
     reservation_not_found: "Reservation was not found.",
@@ -180,6 +186,11 @@ var words = {
     description_en: "Apraksts angliski",
     description_lv: "Apraksts latviski",
     poster_help: "Ievieto plakāta failu images mapē un ieraksti ceļu šeit.",
+    trailer_url: "Treilera saite",
+    trailer_placeholder: "https://www.youtube.com/watch?v=...",
+    trailer_help:
+      "Pievieno YouTube vai oficiālu treilera saiti, ja filmai tā ir.",
+    watch_trailer: "Skatīt treileri",
     session_movie: "Filma šim seansam",
     session_datetime: "Seansa datums un laiks",
     duration: "Ilgums",
@@ -218,6 +229,7 @@ var words = {
     reservation_failed: "Neizdevās saglabāt rezervāciju. Mēģini vēlreiz.",
     invalid_session_data: "Ievadi derīgus seansa datus.",
     invalid_movie_data: "Ievadi derīgus filmas datus.",
+    invalid_trailer_url: "Ievadi derīgu treilera saiti.",
     invalid_reservation_data: "Ievadi derīgus rezervācijas datus.",
     session_not_found: "Seanss nav atrasts.",
     reservation_not_found: "Rezervācija nav atrasta.",
@@ -604,6 +616,7 @@ function loadMoviePage() {
         ":</strong> " +
         escapeHtml(description) +
         "</p>" +
+        trailerButton(movie.trailer_url) +
         "</article>" +
         "</section>";
 
@@ -872,6 +885,7 @@ function loadAdminPage() {
         document.getElementById("duration").value = "";
         document.getElementById("ageRestriction").value = "";
         document.getElementById("poster").value = "";
+        document.getElementById("trailerUrl").value = "";
         loadAdminPage();
       } else {
         showMessage(messageText(data.message), true);
@@ -985,6 +999,21 @@ function editMovie(id) {
   document.getElementById("duration").value = movie.duration;
   document.getElementById("ageRestriction").value = movie.age_restriction;
   document.getElementById("poster").value = movie.poster;
+  document.getElementById("trailerUrl").value = movie.trailer_url || "";
+}
+
+function trailerButton(url) {
+  if (!url) {
+    return "";
+  }
+
+  return (
+    '<a class="button trailer-button" href="' +
+    escapeHtml(url) +
+    '" target="_blank" rel="noopener noreferrer">' +
+    text("watch_trailer") +
+    "</a>"
+  );
 }
 
 function deleteMovie(id) {

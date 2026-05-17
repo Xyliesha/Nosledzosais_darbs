@@ -17,6 +17,10 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -159,14 +163,14 @@ nav a:hover,
   position: relative;
   min-height: calc(100vh - 79px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-bottom: 28px;
-  padding: 64px 5%;
+  padding: 22vh 5% 64px;
   background:
     linear-gradient(
       90deg,
-      rgba(0, 0, 0, 0.68),
-      rgba(0, 0, 0, 0.34) 55%,
+      rgba(0, 0, 0, 0.82),
+      rgba(0, 0, 0, 0.52) 42%,
       rgba(0, 0, 0, 0.5)
     ),
     url("../images/HeroSection.jpg") center / cover no-repeat;
@@ -177,7 +181,7 @@ nav a:hover,
 
 .hero > div {
   width: min(1120px, 100%);
-  margin: 0 auto;
+  margin: 0;
   max-width: 1120px;
 }
 
@@ -359,6 +363,10 @@ input:disabled {
   color: var(--text);
   background: #c7ae97;
   border-color: #c7ae97;
+}
+
+.trailer-button {
+  margin-top: 8px;
 }
 
 .danger {
@@ -661,7 +669,7 @@ th {
 
   .hero {
     min-height: calc(100vh - 139px);
-    padding: 48px 4%;
+    padding: 16vh 4% 48px;
   }
 
   .hero h1 {

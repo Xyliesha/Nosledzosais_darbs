@@ -39,6 +39,7 @@ CREATE TABLE movies (
     duration INT NOT NULL,
     age_restriction VARCHAR(10) NOT NULL DEFAULT '12+',
     poster VARCHAR(255) NOT NULL,
+    trailer_url VARCHAR(255) DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (genre_id) REFERENCES genres(id) ON DELETE RESTRICT
 );

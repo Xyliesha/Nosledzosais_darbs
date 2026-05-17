@@ -330,17 +330,22 @@ if ($action == 'save_movie') {
     $duration = (int)($_POST['duration'] ?? 90);
     $ageRestriction = trim($_POST['age_restriction'] ?? '12+');
     $poster = trim($_POST['poster'] ?? '');
+    $trailerUrl = trim($_POST['trailer_url'] ?? '');
 
     if ($genreId < 1 || $title == '' || $descriptionEn == '' || $descriptionLv == '' || $duration < 1 || $ageRestriction == '' || $poster == '') {
         answer(array('success' => false, 'message' => 'invalid_movie_data'));
     }
 
+    if ($trailerUrl != '' && !filter_var($trailerUrl, FILTER_VALIDATE_URL)) {
+        answer(array('success' => false, 'message' => 'invalid_trailer_url'));
+    }
+
     if ($id > 0) {
-        $stmt = $pdo->prepare('UPDATE movies SET genre_id = ?, title = ?, description_en = ?, description_lv = ?, duration = ?, age_restriction = ?, poster = ? WHERE id = ?');
-        $stmt->execute(array($genreId, $title, $descriptionEn, $descriptionLv, $duration, $ageRestriction, $poster, $id));
+        $stmt = $pdo->prepare('UPDATE movies SET genre_id = ?, title = ?, description_en = ?, description_lv = ?, duration = ?, age_restriction = ?, poster = ?, trailer_url = ? WHERE id = ?');
+        $stmt->execute(array($genreId, $title, $descriptionEn, $descriptionLv, $duration, $ageRestriction, $poster, $trailerUrl, $id));
     } else {
-        $stmt = $pdo->prepare('INSERT INTO movies (genre_id, title, description_en, description_lv, duration, age_restriction, poster) VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $stmt->execute(array($genreId, $title, $descriptionEn, $descriptionLv, $duration, $ageRestriction, $poster));
+        $stmt = $pdo->prepare('INSERT INTO movies (genre_id, title, description_en, description_lv, duration, age_restriction, poster, trailer_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?)');
+        $stmt->execute(array($genreId, $title, $descriptionEn, $descriptionLv, $duration, $ageRestriction, $poster, $trailerUrl));
     }
 
     answer(array('success' => true));
