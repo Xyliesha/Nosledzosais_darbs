@@ -20,9 +20,7 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background:
-    linear-gradient(180deg, #d5dce4 0, #f6f3ef 260px),
-    var(--bg);
+  background: linear-gradient(180deg, #d5dce4 0, #f6f3ef 260px), var(--bg);
   color: var(--text);
   line-height: 1.5;
 }
@@ -105,6 +103,40 @@ nav a:hover,
   border-color: var(--accent-2);
 }
 
+.menu-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: calc(5% + 104px);
+  display: none;
+  width: min(280px, 90vw);
+  padding: 10px;
+  background: var(--soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 18px 34px rgba(103, 75, 54, 0.16);
+  z-index: 20;
+}
+
+.menu-dropdown.is-open {
+  display: grid;
+  gap: 4px;
+}
+
+.menu-dropdown a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  color: var(--text);
+  border-radius: 7px;
+  text-decoration: none;
+}
+
+.menu-dropdown a:hover {
+  background: var(--panel);
+  color: var(--warn);
+}
+
 .nav-icon {
   display: inline-block;
   width: 20px;
@@ -133,8 +165,8 @@ nav a:hover,
 }
 
 .icon-login {
-  mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M15%203h4a2%202%200%200%201%202%202v14a2%202%200%200%201-2%202h-4M10%2017l5-5-5-5M15%2012H3%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M15%203h4a2%202%200%200%201%202%202v14a2%202%200%200%201-2%202h-4M10%2017l5-5-5-5M15%2012H3%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M12%2012a4%204%200%201%200%200-8%204%204%200%200%200%200%208zM4%2021a8%208%200%200%201%208-6M15%2019h6M18%2016l3%203-3%203%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M12%2012a4%204%200%201%200%200-8%204%204%200%200%200%200%208zM4%2021a8%208%200%200%201%208-6M15%2019h6M18%2016l3%203-3%203%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
 }
 
 .icon-register {
@@ -157,6 +189,26 @@ nav a:hover,
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M9%2021H5a2%202%200%200%201-2-2V5a2%202%200%200%201%202-2h4M16%2017l5-5-5-5M21%2012H9%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
 }
 
+.icon-sessions {
+  mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M7%202v4M17%202v4M3%209h18M5%204h14a2%202%200%200%201%202%202v13a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V6a2%202%200%200%201%202-2zM8%2013h3M8%2017h7%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M7%202v4M17%202v4M3%209h18M5%204h14a2%202%200%200%201%202%202v13a2%202%200%200%201-2%202H5a2%202%200%200%201-2-2V6a2%202%200%200%201%202-2zM8%2013h3M8%2017h7%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+}
+
+.icon-news {
+  mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M4%205h16v14H4zM8%209h8M8%2013h8M8%2017h5%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M4%205h16v14H4zM8%209h8M8%2013h8M8%2017h5%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+}
+
+.icon-gifts {
+  mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M20%2012v9H4v-9M2%207h20v5H2zM12%207v14M12%207H8.5a2.5%202.5%200%201%201%202.5-2.5V7zM12%207h3.5A2.5%202.5%200%201%200%2013%204.5V7z%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M20%2012v9H4v-9M2%207h20v5H2zM12%207v14M12%207H8.5a2.5%202.5%200%201%201%202.5-2.5V7zM12%207h3.5A2.5%202.5%200%201%200%2013%204.5V7z%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+}
+
+.icon-events {
+  mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M12%202l2.8%205.7L21%208.6l-4.5%204.4%201.1%206.2L12%2016.3l-5.6%202.9%201.1-6.2L3%208.6l6.2-.9z%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20viewBox%3D%270%200%2024%2024%27%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%3E%3Cpath%20d%3D%27M12%202l2.8%205.7L21%208.6l-4.5%204.4%201.1%206.2L12%2016.3l-5.6%202.9%201.1-6.2L3%208.6l6.2-.9z%27%20stroke%3D%27black%27%20stroke-width%3D%272%27%20fill%3D%27none%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
+}
+
 .container {
   width: min(1120px, 92%);
   margin: 0 auto;
@@ -164,31 +216,49 @@ nav a:hover,
 }
 
 .hero {
-  min-height: 260px;
+  min-height: 280px;
   display: flex;
-  align-items: end;
+  align-items: center;
   margin-bottom: 28px;
-  padding: 32px;
+  padding: 42px;
   background:
-    linear-gradient(90deg, rgba(103, 75, 54, 0.88), rgba(199, 174, 151, 0.42)),
-    url("../images/cinema.svg");
-  background-color: var(--panel-light);
-  background-size: cover;
-  background-position: center;
+    linear-gradient(
+      135deg,
+      rgba(255, 250, 244, 0.92),
+      rgba(237, 232, 231, 0.86)
+    ),
+    linear-gradient(45deg, var(--panel-light), var(--accent-2));
   border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: 0 20px 45px rgba(103, 75, 54, 0.15);
+  border-radius: 18px;
+  box-shadow: 0 20px 45px rgba(103, 75, 54, 0.14);
+}
+
+.hero > div {
+  max-width: 680px;
 }
 
 .hero h1 {
-  margin: 0 0 8px;
-  color: #fffaf4;
-  font-size: 2.5rem;
+  margin: 0 0 12px;
+  color: var(--text);
+  font-size: 3rem;
+  line-height: 1.05;
 }
 
 .hero p {
   max-width: 640px;
-  color: #fffaf4;
+  color: var(--muted);
+}
+
+.hero-button {
+  margin-top: 14px;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}
+
+.hero-button:hover {
+  background: var(--muted);
+  border-color: var(--muted);
 }
 
 .eyebrow,
@@ -528,14 +598,15 @@ th {
     margin-left: 0;
   }
 
-  nav {
-    display: none;
-    grid-column: 1 / -1;
-    padding-left: 0;
+  .menu-dropdown {
+    top: 68px;
+    left: 4%;
+    width: 92%;
   }
 
-  nav.is-open {
-    display: flex;
+  nav {
+    grid-column: 1 / -1;
+    padding-left: 0;
   }
 
   nav a {

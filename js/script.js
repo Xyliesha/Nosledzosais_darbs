@@ -32,6 +32,9 @@ var words = {
     all_genres: "All genres",
     details: "View Details",
     sessions: "Sessions",
+    news: "News",
+    gifts: "Gifts",
+    events: "Events",
     reserve: "Reserve",
     tickets: "Tickets",
     seats_available: "Seats available",
@@ -112,6 +115,9 @@ var words = {
     all_genres: "Visi žanri",
     details: "Skatīt detaļas",
     sessions: "Seansi",
+    news: "Jaunumi",
+    gifts: "Dāvanas",
+    events: "Pasākumi",
     reserve: "Rezervēt",
     tickets: "Biļetes",
     seats_available: "Brīvas vietas",
@@ -288,9 +294,9 @@ function updateMenu() {
 }
 
 function toggleMenu() {
-  var nav = document.getElementById("mainNav");
-  if (nav) {
-    nav.classList.toggle("is-open");
+  var menu = document.getElementById("menuDropdown");
+  if (menu) {
+    menu.classList.toggle("is-open");
   }
 }
 
