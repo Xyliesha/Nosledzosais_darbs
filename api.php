@@ -142,9 +142,6 @@ if ($action == 'reserve') {
     if ($tickets < 1) {
         $tickets = 1;
     }
-    if ($tickets > 10) {
-        $tickets = 10;
-    }
 
     $stmt = $pdo->prepare('SELECT sessions.*, halls.seats_total FROM sessions JOIN halls ON sessions.hall_id = halls.id WHERE sessions.id = ?');
     $stmt->execute(array($sessionId));

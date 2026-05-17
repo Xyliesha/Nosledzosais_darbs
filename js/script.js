@@ -26,6 +26,21 @@ var words = {
     admin: "Admin",
     menu: "Menu",
     language: "Language",
+    hero_label: "Kino Programma",
+    hero_description:
+      "Browse movies, choose sessions and reserve cinema tickets.",
+    browse_movies: "Browse Movies",
+    movie_title_placeholder: "Example: Project Hail Mary",
+    description_en_placeholder: "Write a short movie description in English.",
+    description_lv_placeholder: "Write a short movie description in Latvian.",
+    duration_placeholder: "Example: 120",
+    poster_placeholder: "images/project_hail_mary.jpg",
+    age_placeholder: "Example: 7+, 12+, 16+, 18+",
+    audio_language_placeholder: "Example: English",
+    subtitle_language_placeholder: "Example: Latvian, Russian",
+    price_placeholder: "Example: 7.50",
+    no_account: "If you do not have an account, you can",
+    create_account: "create one",
     welcome: "Browse movies, choose a session, and reserve cinema tickets.",
     search: "Search",
     genre: "Genre",
@@ -40,7 +55,8 @@ var words = {
     reserve: "Reserve",
     tickets: "Tickets",
     seats_available: "Seats available",
-    fake_payment: "Fake payment confirmation",
+    seats_limit_error:
+      "The selected number of tickets exceeds the number of seats in the hall.",
     email: "Email",
     password: "Password",
     name: "Name",
@@ -113,6 +129,21 @@ var words = {
     admin: "Administrācija",
     menu: "Izvēlne",
     language: "Valoda",
+    hero_label: "Kino programma",
+    hero_description:
+      "Parluko filmas, izvelies seansus un rezerve kino biletes.",
+    browse_movies: "Skatit filmas",
+    movie_title_placeholder: "Piemers: Projekts Hail Mary",
+    description_en_placeholder: "Uzraksti isu filmas aprakstu angliski.",
+    description_lv_placeholder: "Uzraksti isu filmas aprakstu latviski.",
+    duration_placeholder: "Piemers: 120",
+    poster_placeholder: "images/project_hail_mary.jpg",
+    age_placeholder: "Piemers: 7+, 12+, 16+, 18+",
+    audio_language_placeholder: "Piemers: anglu",
+    subtitle_language_placeholder: "Piemers: latviesu, krievu",
+    price_placeholder: "Piemers: 7.50",
+    no_account: "Ja tev nav konta, vari",
+    create_account: "izveidot kontu",
     welcome: "Pārlūko filmas, izvēlies seansu un rezervē kino biļetes.",
     search: "Meklēt",
     genre: "Žanrs",
@@ -127,7 +158,7 @@ var words = {
     reserve: "Rezervēt",
     tickets: "Biļetes",
     seats_available: "Brīvas vietas",
-    fake_payment: "Viltus maksājuma apstiprinājums",
+    seats_limit_error: "Izveletais bilešu skaits parsniedz vietu skaitu zale.",
     email: "E-pasts",
     password: "Parole",
     name: "Vārds",
@@ -234,6 +265,12 @@ function translatePage() {
   for (var i = 0; i < items.length; i++) {
     var key = items[i].getAttribute("data-i18n");
     items[i].textContent = text(key);
+  }
+
+  var placeholders = document.querySelectorAll("[data-i18n-placeholder]");
+  for (var j = 0; j < placeholders.length; j++) {
+    var placeholderKey = placeholders[j].getAttribute("data-i18n-placeholder");
+    placeholders[j].placeholder = text(placeholderKey);
   }
 
   var searchInput = document.getElementById("searchInput");
@@ -506,7 +543,7 @@ function loadMoviePage() {
       for (var i = 0; i < data.sessions.length; i++) {
         var session = data.sessions[i];
         var seatsAvailable = Number(
-          session.seats_available || session.seats_total || 0
+          session.seats_available || session.seats_total || 0,
         );
         var buttonsDisabled = seatsAvailable < 1 ? " disabled" : "";
         sessions.innerHTML +=
@@ -542,29 +579,22 @@ function loadMoviePage() {
           "<label>" +
           text("tickets") +
           '<input type="number" min="1" max="' +
-          Math.min(10, seatsAvailable) +
+          seatsAvailable +
           '" value="' +
           (seatsAvailable > 0 ? "1" : "0") +
           '" id="tickets-' +
           session.id +
-          '"' +
+          '" oninput="checkTicketLimit(this)"' +
           buttonsDisabled +
           "></label>" +
           "</div>" +
           '<div class="actions">' +
           '<button onclick="reserveTickets(' +
           session.id +
-          ', false)"' +
+          ')"' +
           buttonsDisabled +
           ">" +
           text("reserve") +
-          "</button>" +
-          '<button class="secondary" onclick="reserveTickets(' +
-          session.id +
-          ', true)"' +
-          buttonsDisabled +
-          ">" +
-          text("fake_payment") +
           "</button>" +
           "</div>" +
           "</div>";
@@ -572,7 +602,17 @@ function loadMoviePage() {
     });
 }
 
-function reserveTickets(sessionId, pay) {
+function checkTicketLimit(input) {
+  var ticketCount = Number(input.value);
+  var maxTickets = Number(input.max);
+
+  if (ticketCount > maxTickets) {
+    showMessage(text("seats_limit_error"), true);
+    input.value = maxTickets;
+  }
+}
+
+function reserveTickets(sessionId) {
   if (!currentUser) {
     showMessage(text("login_required"), true);
     setTimeout(function () {
@@ -581,16 +621,25 @@ function reserveTickets(sessionId, pay) {
     return;
   }
 
+  var ticketInput = document.getElementById("tickets-" + sessionId);
+  var ticketCount = Number(ticketInput.value);
+  var maxTickets = Number(ticketInput.max);
+
+  if (ticketCount > maxTickets) {
+    showMessage(text("seats_limit_error"), true);
+    ticketInput.value = maxTickets;
+    return;
+  }
+
+  if (ticketCount < 1) {
+    showMessage(text("invalid_data"), true);
+    ticketInput.value = 1;
+    return;
+  }
+
   var formData = new FormData();
   formData.append("session_id", sessionId);
-  formData.append(
-    "tickets",
-    document.getElementById("tickets-" + sessionId).value
-  );
-
-  if (pay) {
-    formData.append("pay", "1");
-  }
+  formData.append("tickets", ticketCount);
 
   api("reserve", formData).then(function (data) {
     if (data.success) {
