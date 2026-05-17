@@ -35,6 +35,8 @@ var words = {
     news: "News",
     gifts: "Gifts",
     events: "Events",
+    cinema_hours:
+      "The cinema opens 15 minutes before the first session and closes 15 minutes after the last session starts.",
     reserve: "Reserve",
     tickets: "Tickets",
     seats_available: "Seats available",
@@ -65,6 +67,8 @@ var words = {
     description: "Description",
     date: "Date",
     hall: "Hall",
+    audio_language: "Audio language",
+    subtitle_language: "Subtitles",
     price: "Price",
     status: "Status",
     customer: "Customer",
@@ -118,6 +122,8 @@ var words = {
     news: "Jaunumi",
     gifts: "Dāvanas",
     events: "Pasākumi",
+    cinema_hours:
+      "Kinoteātris tiek atvērts 15 minūtes pirms pirmā seansa sākuma un tiek slēgts 15 minūtes pēc pēdējā seansa sākuma.",
     reserve: "Rezervēt",
     tickets: "Biļetes",
     seats_available: "Brīvas vietas",
@@ -147,6 +153,8 @@ var words = {
     description: "Apraksts",
     date: "Datums",
     hall: "Zāle",
+    audio_language: "Audio valoda",
+    subtitle_language: "Subtitri",
     price: "Cena",
     status: "Statuss",
     customer: "Klients",
@@ -498,7 +506,7 @@ function loadMoviePage() {
       for (var i = 0; i < data.sessions.length; i++) {
         var session = data.sessions[i];
         var seatsAvailable = Number(
-          session.seats_available || session.seats_total || 0,
+          session.seats_available || session.seats_total || 0
         );
         var buttonsDisabled = seatsAvailable < 1 ? " disabled" : "";
         sessions.innerHTML +=
@@ -515,6 +523,16 @@ function loadMoviePage() {
           text("price") +
           ": EUR " +
           session.price +
+          "</p>" +
+          '<p class="session-language">' +
+          '<span class="language-item">' +
+          '<img class="language-icon" src="images/icons/audio.svg" alt="" aria-hidden="true">' +
+          escapeHtml(session.audio_language || "-") +
+          "</span>" +
+          '<span class="language-item">' +
+          '<img class="language-icon" src="images/icons/subtitles.svg" alt="" aria-hidden="true">' +
+          escapeHtml(session.subtitle_language || "-") +
+          "</span>" +
           "</p>" +
           "<p>" +
           text("seats_available") +
@@ -567,7 +585,7 @@ function reserveTickets(sessionId, pay) {
   formData.append("session_id", sessionId);
   formData.append(
     "tickets",
-    document.getElementById("tickets-" + sessionId).value,
+    document.getElementById("tickets-" + sessionId).value
   );
 
   if (pay) {
@@ -762,6 +780,7 @@ function loadAdminPage() {
 function fillAdminSelects(data) {
   var movieGenre = document.getElementById("movieGenre");
   var sessionMovie = document.getElementById("sessionMovie");
+  var sessionHall = document.getElementById("sessionHall");
   var genres = data.genres && data.genres.length ? data.genres : defaultGenres;
 
   renderGenreOptions(movieGenre, genres, movieGenre.value, false);
@@ -774,6 +793,20 @@ function fillAdminSelects(data) {
       '">' +
       escapeHtml(data.movies[j].title) +
       "</option>";
+  }
+
+  sessionHall.innerHTML = "";
+  for (var k = 0; k < data.halls.length; k++) {
+    sessionHall.innerHTML +=
+      '<option value="' +
+      data.halls[k].id +
+      '">' +
+      escapeHtml(data.halls[k].name) +
+      " (" +
+      data.halls[k].seats_total +
+      " " +
+      text("seats") +
+      ")</option>";
   }
 }
 
@@ -862,6 +895,17 @@ function fillSessionTable(sessions) {
       "</td>" +
       "<td>" +
       escapeHtml(session.hall) +
+      " (" +
+      session.seats_total +
+      " " +
+      text("seats") +
+      ")" +
+      "</td>" +
+      "<td>" +
+      escapeHtml(session.audio_language || "-") +
+      "</td>" +
+      "<td>" +
+      escapeHtml(session.subtitle_language || "-") +
       "</td>" +
       '<td><button class="danger" onclick="deleteSession(' +
       session.id +

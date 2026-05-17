@@ -11,48 +11,89 @@
     <header class="topbar">
       <a class="brand" href="index.html">Kino</a>
       <button type="button" class="menu-button" onclick="toggleMenu()">
-        <span class="nav-icon icon-menu" aria-hidden="true"></span>
+        <img
+          class="nav-icon"
+          src="images/icons/menu.svg"
+          alt=""
+          aria-hidden="true"
+        />
         <span data-i18n="menu">Menu</span>
       </button>
       <div class="menu-dropdown" id="menuDropdown">
         <a href="index.html#movieList"
-          ><span class="nav-icon icon-movies" aria-hidden="true"></span
-          ><span data-i18n="movies">Movies</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/movies.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="movies">Movies</span></a
         >
         <a href="index.html#movieList"
-          ><span class="nav-icon icon-sessions" aria-hidden="true"></span
-          ><span data-i18n="sessions">Sessions</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/sessions.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="sessions">Sessions</span></a
         >
         <a href="#"
-          ><span class="nav-icon icon-news" aria-hidden="true"></span
-          ><span data-i18n="news">News</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/news.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="news">News</span></a
         >
         <a href="#"
-          ><span class="nav-icon icon-gifts" aria-hidden="true"></span
-          ><span data-i18n="gifts">Gifts</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/gifts.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="gifts">Gifts</span></a
         >
         <a href="#"
-          ><span class="nav-icon icon-events" aria-hidden="true"></span
-          ><span data-i18n="events">Events</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/events.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="events">Events</span></a
         >
       </div>
 
       <nav id="mainNav">
         <a href="index.html"
-          ><span class="nav-icon icon-movies" aria-hidden="true"></span
-          ><span data-i18n="movies">Movies</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/movies.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="movies">Movies</span></a
         >
         <a href="profile.html"
-          ><span class="nav-icon icon-profile" aria-hidden="true"></span
-          ><span data-i18n="profile">Profile</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/profile.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="profile">Profile</span></a
         >
         <a href="admin.html" class="admin-link"
-          ><span class="nav-icon icon-admin" aria-hidden="true"></span
-          ><span data-i18n="admin">Admin</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/admin.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="admin">Admin</span></a
         >
         <a href="#" id="logoutLink" class="user-link"
-          ><span class="nav-icon icon-logout" aria-hidden="true"></span
-          ><span data-i18n="logout">Logout</span></a
+          ><img
+            class="nav-icon"
+            src="images/icons/logout.svg"
+            alt=""
+            aria-hidden="true"
+          /><span data-i18n="logout">Logout</span></a
         >
       </nav>
 
@@ -197,7 +238,25 @@
 
         <label>
           <span data-i18n="hall">Hall</span>
-          <input name="hall" placeholder="Example: Hall 1" required />
+          <select name="hall_id" id="sessionHall" required></select>
+        </label>
+
+        <label>
+          <span data-i18n="audio_language">Audio language</span>
+          <input
+            name="audio_language"
+            placeholder="Example: English"
+            required
+          />
+        </label>
+
+        <label>
+          <span data-i18n="subtitle_language">Subtitles</span>
+          <input
+            name="subtitle_language"
+            placeholder="Example: Latvian, Russian"
+            required
+          />
         </label>
 
         <label>
@@ -212,18 +271,6 @@
           />
         </label>
 
-        <label>
-          <span data-i18n="seats">Seats</span>
-          <input
-            type="number"
-            name="seats_total"
-            min="1"
-            value="60"
-            placeholder="Example: 60"
-            required
-          />
-        </label>
-
         <button type="submit" data-i18n="add_session">Add session</button>
       </form>
 
@@ -234,6 +281,8 @@
               <th data-i18n="title">Title</th>
               <th data-i18n="date">Date</th>
               <th data-i18n="hall">Hall</th>
+              <th data-i18n="audio_language">Audio language</th>
+              <th data-i18n="subtitle_language">Subtitles</th>
               <th data-i18n="actions">Actions</th>
             </tr>
           </thead>

@@ -1,4 +1,4 @@
-const CACHE_NAME = "kino-programma-v2";
+const CACHE_NAME = "kino-programma-v3";
 const ASSETS = [
   "../index.html",
   "../movie.html",
@@ -10,6 +10,19 @@ const ASSETS = [
   "script.js",
   "../manifest.json",
   "../images/icon.svg",
+  "../images/icons/admin.svg",
+  "../images/icons/audio.svg",
+  "../images/icons/events.svg",
+  "../images/icons/gifts.svg",
+  "../images/icons/login.svg",
+  "../images/icons/logout.svg",
+  "../images/icons/menu.svg",
+  "../images/icons/movies.svg",
+  "../images/icons/news.svg",
+  "../images/icons/profile.svg",
+  "../images/icons/register.svg",
+  "../images/icons/sessions.svg",
+  "../images/icons/subtitles.svg",
   "../images/Drama.jpg",
   "../images/Hokum.jpg",
   "../images/Hoppers.jpg",
@@ -32,5 +45,17 @@ self.addEventListener("fetch", (event) => {
     caches
       .match(event.request)
       .then((cached) => cached || fetch(event.request)),
+  );
+});
+
+self.addEventListener("activate", (event) => {
+  event.waitUntil(
+    caches.keys().then((names) =>
+      Promise.all(
+        names
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
+      )
+    )
   );
 });

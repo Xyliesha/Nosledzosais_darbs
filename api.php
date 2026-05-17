@@ -64,12 +64,16 @@ if ($action == 'movie') {
     $stmt->execute(array($id));
     $movie = $stmt->fetch();
 
-    $stmt = $pdo->prepare("SELECT sessions.*,
-                                  GREATEST(sessions.seats_total - COALESCE(SUM(CASE WHEN reservations.status != 'cancelled' THEN reservations.tickets ELSE 0 END), 0), 0) AS seats_available
+    $stmt = $pdo->prepare("SELECT sessions.*, halls.name AS hall, halls.seats_total,
+                                  GREATEST(halls.seats_total - (
+                                      SELECT COALESCE(SUM(reservations.tickets), 0)
+                                      FROM reservations
+                                      WHERE reservations.session_id = sessions.id
+                                      AND reservations.status != 'cancelled'
+                                  ), 0) AS seats_available
                            FROM sessions
-                           LEFT JOIN reservations ON reservations.session_id = sessions.id
+                           JOIN halls ON sessions.hall_id = halls.id
                            WHERE sessions.movie_id = ?
-                           GROUP BY sessions.id
                            ORDER BY sessions.show_time");
     $stmt->execute(array($id));
 
@@ -142,7 +146,7 @@ if ($action == 'reserve') {
         $tickets = 10;
     }
 
-    $stmt = $pdo->prepare('SELECT * FROM sessions WHERE id = ?');
+    $stmt = $pdo->prepare('SELECT sessions.*, halls.seats_total FROM sessions JOIN halls ON sessions.hall_id = halls.id WHERE sessions.id = ?');
     $stmt->execute(array($sessionId));
     $session = $stmt->fetch();
 
@@ -165,6 +169,12 @@ if ($action == 'reserve') {
 
     $stmt = $pdo->prepare('INSERT INTO reservations (user_id, session_id, tickets, total_price, status) VALUES (?, ?, ?, ?, ?)');
     $stmt->execute(array($_SESSION['user']['id'], $sessionId, $tickets, $total, $status));
+    $reservationId = $pdo->lastInsertId();
+
+    if ($status == 'paid') {
+        $stmt = $pdo->prepare('INSERT INTO payments (reservation_id, amount, status) VALUES (?, ?, "paid")');
+        $stmt->execute(array($reservationId, $total));
+    }
 
     answer(array('success' => true));
 }
@@ -172,9 +182,10 @@ if ($action == 'reserve') {
 if ($action == 'reservations') {
     requireUser();
 
-    $stmt = $pdo->prepare("SELECT reservations.*, sessions.show_time, sessions.hall, movies.title
+    $stmt = $pdo->prepare("SELECT reservations.*, sessions.show_time, halls.name AS hall, movies.title
                            FROM reservations
                            JOIN sessions ON reservations.session_id = sessions.id
+                           JOIN halls ON sessions.hall_id = halls.id
                            JOIN movies ON sessions.movie_id = movies.id
                            WHERE reservations.user_id = ?
                            ORDER BY reservations.created_at DESC");
@@ -198,11 +209,13 @@ if ($action == 'admin_data') {
 
     $movies = $pdo->query('SELECT movies.*, genres.name_en, genres.name_lv FROM movies JOIN genres ON movies.genre_id = genres.id ORDER BY movies.title')->fetchAll();
     $genres = $pdo->query('SELECT * FROM genres ORDER BY name_en')->fetchAll();
-    $sessions = $pdo->query('SELECT sessions.*, movies.title FROM sessions JOIN movies ON sessions.movie_id = movies.id ORDER BY sessions.show_time')->fetchAll();
-    $reservationList = $pdo->query("SELECT reservations.*, users.name, users.email, sessions.show_time, sessions.hall, movies.title
+    $halls = $pdo->query('SELECT * FROM halls ORDER BY name')->fetchAll();
+    $sessions = $pdo->query('SELECT sessions.*, halls.name AS hall, halls.seats_total, movies.title FROM sessions JOIN halls ON sessions.hall_id = halls.id JOIN movies ON sessions.movie_id = movies.id ORDER BY sessions.show_time')->fetchAll();
+    $reservationList = $pdo->query("SELECT reservations.*, users.name, users.email, sessions.show_time, halls.name AS hall, movies.title
                                     FROM reservations
                                     JOIN users ON reservations.user_id = users.id
                                     JOIN sessions ON reservations.session_id = sessions.id
+                                    JOIN halls ON sessions.hall_id = halls.id
                                     JOIN movies ON sessions.movie_id = movies.id
                                     ORDER BY reservations.created_at DESC")->fetchAll();
     $users = $pdo->query('SELECT COUNT(*) AS total FROM users')->fetch();
@@ -219,6 +232,7 @@ if ($action == 'admin_data') {
         'success' => true,
         'movies' => $movies,
         'genres' => $genres,
+        'halls' => $halls,
         'sessions' => $sessions,
         'reservations' => $reservationList,
         'totalUsers' => $users['total'],
@@ -247,7 +261,7 @@ if ($action == 'update_reservation_status') {
     }
 
     if ($status != 'cancelled') {
-        $stmt = $pdo->prepare('SELECT * FROM sessions WHERE id = ?');
+        $stmt = $pdo->prepare('SELECT sessions.*, halls.seats_total FROM sessions JOIN halls ON sessions.hall_id = halls.id WHERE sessions.id = ?');
         $stmt->execute(array($reservation['session_id']));
         $session = $stmt->fetch();
 
@@ -265,6 +279,17 @@ if ($action == 'update_reservation_status') {
 
     $stmt = $pdo->prepare('UPDATE reservations SET status = ? WHERE id = ?');
     $stmt->execute(array($status, $id));
+
+    if ($status == 'paid') {
+        $stmt = $pdo->prepare('SELECT id FROM payments WHERE reservation_id = ?');
+        $stmt->execute(array($id));
+        $payment = $stmt->fetch();
+
+        if (!$payment) {
+            $stmt = $pdo->prepare('INSERT INTO payments (reservation_id, amount, status) VALUES (?, ?, "paid")');
+            $stmt->execute(array($id, $reservation['total_price']));
+        }
+    }
 
     answer(array('success' => true));
 }
@@ -319,23 +344,25 @@ if ($action == 'delete_movie') {
 if ($action == 'add_session') {
     requireAdmin();
 
-    $movieId = (int)$_POST['movie_id'];
-    $showTime = trim($_POST['show_time']);
-    $hall = trim($_POST['hall']);
-    $price = (float)$_POST['price'];
-    $seatsTotal = (int)$_POST['seats_total'];
+    $movieId = (int)($_POST['movie_id'] ?? 0);
+    $hallId = (int)($_POST['hall_id'] ?? 0);
+    $showTime = trim($_POST['show_time'] ?? '');
+    $audioLanguage = trim($_POST['audio_language'] ?? '');
+    $subtitleLanguage = trim($_POST['subtitle_language'] ?? '');
+    $price = (float)($_POST['price'] ?? 0);
 
-    if ($movieId < 1 || $showTime == '' || $hall == '' || $price < 0 || $seatsTotal < 1) {
+    if ($movieId < 1 || $hallId < 1 || $showTime == '' || $audioLanguage == '' || $subtitleLanguage == '' || $price < 0) {
         answer(array('success' => false, 'message' => 'invalid_session_data'));
     }
 
-    $stmt = $pdo->prepare('INSERT INTO sessions (movie_id, show_time, hall, price, seats_total) VALUES (?, ?, ?, ?, ?)');
+    $stmt = $pdo->prepare('INSERT INTO sessions (movie_id, hall_id, show_time, audio_language, subtitle_language, price) VALUES (?, ?, ?, ?, ?, ?)');
     $stmt->execute(array(
         $movieId,
+        $hallId,
         $showTime,
-        $hall,
-        $price,
-        $seatsTotal
+        $audioLanguage,
+        $subtitleLanguage,
+        $price
     ));
 
     answer(array('success' => true));
