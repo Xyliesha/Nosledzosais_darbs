@@ -49,9 +49,11 @@ Tabulas:
 
 - `users`
 - `genres`
+- `halls`
 - `movies`
 - `sessions`
 - `reservations`
+- `payments`
 
 ## Testa Lietotāji
 
@@ -74,13 +76,17 @@ Parasts lietotājs:
 - Filtru izmantošana pēc žanra
 - Filmas detalizēta skata atvēršana
 - Filmas seansu apskate
+- Pieejamo vietu skaita rādīšana seansiem
+- Seansa audio valodas un subtitru valodas rādīšana
 - Lietotāja reģistrācija
 - Lietotāja pieslēgšanās
 - Biļešu rezervācija
-- Viltus maksājuma apstiprināšana
+- Rezervāciju statusu pārvaldība
 - Rezervāciju vēstures apskate
+- Populāro filmu bloks pēc rezervēto biļešu skaita
 - Administrators var pievienot, labot un dzēst filmas
 - Administrators var pārvaldīt seansus
+- Administrators var pārvaldīt rezervāciju statusus un dzēst rezervācijas
 - Vienkārša statistika administrācijas panelī
 - Angļu un latviešu valodas pārslēgšana
 - Vienkāršs PWA atbalsts
@@ -99,14 +105,20 @@ Administratoram jāievada:
 - filmas ilgums
 - vecuma ierobežojums
 - plakāta ceļš, piemēram `images/Project_Hail_Mary.jpg`
+- treilera saite, ja filmai tāda ir
 
 Pēc filmas pievienošanas administrators var pievienot seansus:
 
 - filma
 - seansa datums un laiks
 - zāle
+- audio valoda
+- subtitru valoda
 - cena
-- vietu skaits
+
+Vietu skaits netiek ievadīts katram seansam atsevišķi. Tas tiek ņemts no izvēlētās zāles `halls` tabulā.
+
+Administrators var arī mainīt rezervācijas statusu uz `pending`, `paid` vai `cancelled`. Ja rezervācija tiek atzīmēta kā `paid`, `payments` tabulā tiek izveidots maksājuma ieraksts.
 
 Kad dati tiek saglabāti, tie nonāk MySQL datubāzē. Galvenā lapa `index.html` un filmas lapa `movie.html` ielādē datus no `api.php`, izmantojot JavaScript `fetch()`.
 
@@ -115,9 +127,10 @@ Kad dati tiek saglabāti, tie nonāk MySQL datubāzē. Galvenā lapa `index.html
 1. Plakātu attēli tiek glabāti `images/` mapē.
 2. Filmu dati tiek glabāti MySQL datubāzē.
 3. Administrators pievieno vai labo filmas `admin.html` lapā.
-4. `api.php` saglabā datus datubāzē.
-5. `index.html` ielādē filmu sarakstu no datubāzes.
-6. `movie.html` ielādē vienu izvēlēto filmu un tās seansus.
+4. Administrators pievieno seansus, izvēloties filmu, zāli, laiku, audio valodu, subtitrus un cenu.
+5. `api.php` saglabā datus datubāzē.
+6. `index.html` ielādē filmu sarakstu un populārās filmas no datubāzes.
+7. `movie.html` ielādē vienu izvēlēto filmu, tās seansus un aprēķina pieejamās vietas pēc zāles ietilpības un rezervācijām.
 
 ## Drošība
 
